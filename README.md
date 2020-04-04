@@ -32,3 +32,10 @@ python manage.py createsuperuser
 1. Drop the database and recreate it using the commands given above.
 2. Delete all files in the migrations folder. (excluding \_\_init\_\_.py)
 3. Run the commands given in the First Commands section.
+
+## Upgrade setuptools
+```shell script
+python -m pip install pip --upgrade
+pip install setuptools --upgrade --ignore-installed
+python -m pip install --upgrade Pillow
+```
