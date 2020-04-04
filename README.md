@@ -33,9 +33,19 @@ python manage.py createsuperuser
 2. Delete all files in the migrations folder. (excluding \_\_init\_\_.py)
 3. Run the commands given in the First Commands section.
 
-## Upgrade setuptools
+## Special commands
 ```shell script
 python -m pip install pip --upgrade
 pip install setuptools --upgrade --ignore-installed
 python -m pip install --upgrade Pillow
 ```
+
+## Fix the migrations not found in django.db error
+1. Ctrl+Shift+R -> "C:\Users\hasan\PycharmProjects\untitled\venv" to your venv path
+2. Change the home variable in pyvenv.cfg to your python path
+3. Run the commands:
+    ```shell script
+    pip uninstall django
+    pip install django --upgrade
+    ```
+4. Done! Now you can use pycharm to run scripts.
