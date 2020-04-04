@@ -37,4 +37,5 @@ python manage.py createsuperuser
 ```shell script
 python -m pip install pip --upgrade
 pip install setuptools --upgrade --ignore-installed
+python -m pip install --upgrade Pillow
 ```
