@@ -15,3 +15,19 @@ class PieceBaseModel(models.Model):
                               verbose_name="Photo")
     text = models.TextField(null=True, verbose_name="Description")
     wished_by = models.ManyToManyField(to=User, related_name="wishes")
+
+
+class Author(models.Model):
+    first_name = models.CharField(null=False, max_length=100, verbose_name="First Name")
+    last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
+    photo = models.ImageField(upload_to="author_photos", default="author_photos/default_author.jpg",
+                              verbose_name="Photo")
+
+
+class BookGenre(models.Model):
+    name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
+
+
+class Book(PieceBaseModel):
+    author = models.ForeignKey(to=Author, on_delete=models.CASCADE, related_name="books")
+    genre = models.ForeignKey(to=BookGenre, on_delete=models.CASCADE, related_name="books")
