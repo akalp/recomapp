@@ -5,7 +5,8 @@ from django.db import models
 # Create your models here.
 class User(AbstractUser):
     birthday = models.DateField(null=True, verbose_name="Birthday")
-    profile_photo = models.ImageField(upload_to="profile_photos", default="profile_photos/default_profile.jpg", verbose_name="Profile Photo")
+    profile_photo = models.ImageField(upload_to="profile_photos", default="profile_photos/default_profile.jpg",
+                                      verbose_name="Profile Photo")
 
 
 class PieceBaseModel(models.Model):
@@ -31,3 +32,27 @@ class BookGenre(models.Model):
 class Book(PieceBaseModel):
     author = models.ForeignKey(to=Author, on_delete=models.CASCADE, related_name="books")
     genre = models.ForeignKey(to=BookGenre, on_delete=models.CASCADE, related_name="books")
+
+
+class Singer(models.Model):
+    first_name = models.CharField(null=False, max_length=100, verbose_name="First Name")
+    last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
+    photo = models.ImageField(upload_to="singer_photos", default="singer_photos/default_singer.jpg",
+                              verbose_name="Photo")
+
+
+class Album(models.Model):
+    name = models.CharField(null=False, max_length=100, verbose_name="Album Name")
+    publish_date = models.DateField(null=False, verbose_name="Publish Date")
+    photo = models.ImageField(upload_to="album_photos", default="album_photos/default_album.jpg",
+                              verbose_name="Photo")
+    singer = models.ForeignKey(to=Singer, on_delete=models.CASCADE, related_name="album")
+
+
+class MusicGenre(models.Model):
+    name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
+
+
+class Music(PieceBaseModel):
+    album = models.ForeignKey(to=Album, on_delete=models.CASCADE, related_name="music")
+    genre = models.ForeignKey(to=MusicGenre, on_delete=models.CASCADE, related_name="music")

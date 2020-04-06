@@ -41,7 +41,7 @@ python -m pip install --upgrade Pillow
 ```
 
 ## Fix the migrations not found in django.db error
-1. Ctrl+Shift+R -> "C:\Users\hasan\PycharmProjects\untitled\venv" to your venv path
+1. Ctrl+Shift+R -> "C:\Users\Bahar\recomapp\venv" to your venv path
 2. Change the home variable in pyvenv.cfg to your python path
 3. Run the commands:
     ```shell script
