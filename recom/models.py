@@ -31,3 +31,27 @@ class BookGenre(models.Model):
 class Book(PieceBaseModel):
     author = models.ForeignKey(to=Author, on_delete=models.CASCADE, related_name="books")
     genre = models.ForeignKey(to=BookGenre, on_delete=models.CASCADE, related_name="books")
+
+
+class Director(models.Model):
+    first_name = models.CharField(null=False, max_length=100, verbose_name="First Name")
+    last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
+    photo = models.ImageField(upload_to="director_photos", default="director_photos/default_director.jpg",
+                              verbose_name="Photo")
+
+
+class MovieGenre(models.Model):
+    name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
+
+
+class Performer(models.Model):
+    first_name = models.CharField(null=False, max_length=100, verbose_name="First Name")
+    last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
+    photo = models.ImageField(upload_to="performer_photos", default="performer_photos/default_performer.jpg",
+                              verbose_name="Photo")
+
+
+class Movie(PieceBaseModel):
+    director = models.ForeignKey(to=Director, on_delete=models.CASCADE, related_name="movie")
+    genre = models.ForeignKey(to=MovieGenre, on_delete=models.CASCADE, related_name="movie")
+    acted_by = models.ManyToManyField(to=Performer, related_name="acts")
