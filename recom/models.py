@@ -14,7 +14,7 @@ class PieceBaseModel(models.Model):
     photo = models.ImageField(upload_to="piece_photos", default="piece_photos/default_piece.jpg",
                               verbose_name="Photo")
     text = models.TextField(null=True, verbose_name="Description")
-    wished_by = models.ManyToManyField(to=User, related_name="wishes")
+    wished_by = models.ManyToManyField(to=User, related_name="wishes", blank=True)
 
 
 class Point(models.Model):
@@ -30,7 +30,7 @@ class Comment(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="comments", verbose_name="User")
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="comments", verbose_name="Piece")
     text = models.TextField(null=False, max_length=500, verbose_name="Comment")
-    liked = models.ManyToManyField(to=User, related_name="liked_comments", verbose_name="Liked by")
+    liked = models.ManyToManyField(to=User, related_name="liked_comments", verbose_name="Liked by", blank=True)
 
     class Meta:
         unique_together = ("user", "piece",)
@@ -46,6 +46,9 @@ class Author(models.Model):
 class BookGenre(models.Model):
     name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
 
+    def __str__(self):
+        return self.name
+
 
 class Book(PieceBaseModel):
     author = models.ForeignKey(to=Author, on_delete=models.CASCADE, related_name="books")
@@ -58,9 +61,18 @@ class Director(models.Model):
     photo = models.ImageField(upload_to="director_photos", default="director_photos/default_director.jpg",
                               verbose_name="Photo")
 
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+    def get_full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
 
 class MovieGenre(models.Model):
     name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
+
+    def __str__(self):
+        return self.name
 
 
 class Performer(models.Model):
@@ -73,7 +85,10 @@ class Performer(models.Model):
 class Movie(PieceBaseModel):
     director = models.ForeignKey(to=Director, on_delete=models.CASCADE, related_name="movie")
     genre = models.ForeignKey(to=MovieGenre, on_delete=models.CASCADE, related_name="movie")
-    acted_by = models.ManyToManyField(to=Performer, related_name="acts")
+    acted_by = models.ManyToManyField(to=Performer, related_name="acts", blank=True)
+
+    def __str__(self):
+        return self.name
 
     
 class Singer(models.Model):
@@ -93,6 +108,9 @@ class Album(models.Model):
 
 class MusicGenre(models.Model):
     name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
+
+    def __str__(self):
+        return self.name
 
 
 class Music(PieceBaseModel):
