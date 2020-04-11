@@ -17,6 +17,25 @@ class PieceBaseModel(models.Model):
     wished_by = models.ManyToManyField(to=User, related_name="wishes")
 
 
+class Point(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="points", verbose_name="User")
+    piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="points", verbose_name="Piece")
+    point = models.IntegerField(null=False, verbose_name="Point")
+
+    class Meta:
+        unique_together = ("user", "piece",)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="comments", verbose_name="User")
+    piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="points", verbose_name="Piece")
+    text = models.TextField(null=False, max_length=500, verbose_name="Comment")
+    liked = models.ManyToManyField(to=User, related_name="liked_comments", verbose_name="Liked by")
+
+    class Meta:
+        unique_together = ("user", "piece",)
+
+
 class Author(models.Model):
     first_name = models.CharField(null=False, max_length=100, verbose_name="First Name")
     last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
@@ -55,3 +74,28 @@ class Movie(PieceBaseModel):
     director = models.ForeignKey(to=Director, on_delete=models.CASCADE, related_name="movie")
     genre = models.ForeignKey(to=MovieGenre, on_delete=models.CASCADE, related_name="movie")
     acted_by = models.ManyToManyField(to=Performer, related_name="acts")
+
+    
+class Singer(models.Model):
+    first_name = models.CharField(null=False, max_length=100, verbose_name="First Name")
+    last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
+    photo = models.ImageField(upload_to="singer_photos", default="singer_photos/default_singer.jpg",
+                              verbose_name="Photo")
+
+
+class Album(models.Model):
+    name = models.CharField(null=False, max_length=100, verbose_name="Album Name")
+    publish_date = models.DateField(null=False, verbose_name="Publish Date")
+    photo = models.ImageField(upload_to="album_photos", default="album_photos/default_album.jpg",
+                              verbose_name="Photo")
+    singer = models.ForeignKey(to=Singer, on_delete=models.CASCADE, related_name="album")
+
+
+class MusicGenre(models.Model):
+    name = models.CharField(null=False, max_length=50, verbose_name="Genre Name")
+
+
+class Music(PieceBaseModel):
+    album = models.ForeignKey(to=Album, on_delete=models.CASCADE, related_name="music")
+    genre = models.ForeignKey(to=MusicGenre, on_delete=models.CASCADE, related_name="music")
+
