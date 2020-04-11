@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}RecoMapp{% endblock %}
+{% block content %}
+    <ul>
+        {% for movie in movies %}
+            <li><a href="{% url "recom:movie_detail" pk=movie.pk%}">{{ movie.pk }} - {{ movie }}</a> {% if user.is_superuser %}<a type="button" href="{% url 'recom:movie_delete' pk=movie.pk %}">Delete</a>{% endif %}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

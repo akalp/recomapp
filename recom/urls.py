@@ -14,10 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+
 from recom import views
+from recom.views import IndexView, MovieListView, MovieDetailView, MovieDeleteView
 
 app_name = 'recom'
 
 urlpatterns = [
-
+    path('', IndexView.as_view()),
+    path('movies', MovieListView.as_view(), name="movie_list"),
+    path('movies/<pk>', MovieDetailView.as_view(), name="movie_detail"),
+    path('movies/<pk>/delete', MovieDeleteView.as_view(), name="movie_delete")
 ]

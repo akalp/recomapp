@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ movie.name }}|RecoMapp{% endblock %}
+{% block content %}
+    <img src="{{ movie.photo.url }}" alt="" height="200px" width="200px">
+    <h1>{{ movie.name }}</h1>
+    <h2>{{ movie.director }}</h2>
+    <h3>{{ movie.publish_date }}</h3>
+{% endblock %}
