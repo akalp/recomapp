@@ -21,6 +21,7 @@ class Point(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="points", verbose_name="User")
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="points", verbose_name="Piece")
     point = models.IntegerField(null=False, verbose_name="Point")
+    date = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("user", "piece",)
@@ -31,6 +32,7 @@ class Comment(models.Model):
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="comments", verbose_name="Piece")
     text = models.TextField(null=False, max_length=500, verbose_name="Comment")
     liked = models.ManyToManyField(to=User, related_name="liked_comments", verbose_name="Liked by", blank=True)
+    date = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("user", "piece",)
