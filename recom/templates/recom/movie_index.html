@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Best 10 Movies</h1>
     <ul>
-        {% for movie in movies %}
+        {% for movie in bests %}
             <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg Point: {{ movie.avg_point }})</a></li>
         {% endfor %}
     </ul>

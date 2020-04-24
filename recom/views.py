@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Case, When, IntegerField
 from django.shortcuts import render
 
 # Create your views here.
@@ -34,8 +34,11 @@ class MovieTrendListView(generic.ListView):
     context_object_name = "movies"
 
     def get_queryset(self):
-        return self.model.objects.filter(points__date__gte=datetime.date.today() - datetime.timedelta(days=7)).annotate(
-            counts=Count('points'), avg_point=(Avg('points__point'))).order_by('-counts')
+        trending_time = datetime.date.today() - datetime.timedelta(days=7)
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
+            Case(When(points__date__gte=trending_time, then=1),
+                 output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
+            '-counts')
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
@@ -48,16 +51,16 @@ class MovieIndex(generic.ListView):
     template_name = 'recom/movie_index.html'
     context_object_name = "movies"
 
-    def get_queryset(self):
-        return self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
-
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
-        data["trends"] = self.model.objects.filter(
-            points__date__gte=datetime.date.today() - datetime.timedelta(days=7)).annotate(counts=Count('points'),
-                                                                                           avg_point=(Avg(
-                                                                                               'points__point'))).order_by(
-            '-counts')[:11]  ## Son 7 güne ait puan ortalamasını getiriyor
+
+        data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+
+        trending_time = datetime.date.today() - datetime.timedelta(days=7)
+        data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
+            Case(When(points__date__gte=trending_time, then=1),
+                 output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
+            '-counts')[:11]
         return data
 
 
