@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Movies | RecoMapp{% endblock %}
+{% block content %}
+    <h1>Best 10 Movies</h1>
+    <ul>
+        {% for movie in movies %}
+            <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg Point: {{ movie.avg_point }})</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url "recom:movie_best" %}">See all best movies.</a>
+
+    <h1>Top 10 Trend Movies</h1>
+    <ul>
+        {% for movie in trends %}
+            <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg Point: {{ movie.avg_point }}) (How many user gave point: {{ movie.counts }})</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url "recom:movie_trend" %}">See all trend movies.</a>
+{% endblock %}
