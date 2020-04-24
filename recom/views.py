@@ -21,8 +21,3 @@ class MovieDetailView(generic.DetailView):
     model = Movie
     context_object_name = 'movie'
     template_name = 'recom/movie_detail.html'
-
-
-class MovieDeleteView(generic.DeleteView):
-    model = Movie
-    success_url = reverse_lazy('recom:movie_list')
