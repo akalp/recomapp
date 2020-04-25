@@ -2,10 +2,8 @@ import datetime
 
 from django.contrib.auth import get_user_model
 from django.db.models import Avg, Count, Case, When, IntegerField, Q
-from django.shortcuts import render
 
 # Create your views here.
-from django.urls import reverse_lazy
 from django.views import generic
 
 from recom.models import Movie
@@ -75,6 +73,5 @@ class MovieDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        print(kwargs)
         data["full_pointers"] = get_user_model().objects.filter(Q(points__point=5) & Q(points__piece_id=kwargs['object']))
         return data
