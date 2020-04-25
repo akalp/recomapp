@@ -16,4 +16,12 @@
         {% endfor %}
     </ul>
     <a href="{% url "recom:movie_trend" %}">See all trend movies.</a>
+
+
+    <h1>Active Users</h1>
+    <ul>
+    {% for user in active_users %}
+        <li>{{ user.get_full_name }} - {{ user.username }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

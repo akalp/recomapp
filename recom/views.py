@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth import get_user_model
 from django.db.models import Avg, Count, Case, When, IntegerField
 from django.shortcuts import render
 
@@ -61,6 +62,9 @@ class MovieIndex(generic.ListView):
             Case(When(points__date__gte=trending_time, then=1),
                  output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
             '-counts')[:11]
+
+        act_user_query = "select u.*, count(p.id) as count from recom_{} m, recom_piecebasemodel b, recom_point p, recom_user u where m.piecebasemodel_ptr_id = b.id and p.piece_id=b.id and p.user_id=u.id group by u.id order by count desc".format("movie")
+        data["active_users"] = get_user_model().objects.raw(act_user_query)
         return data
 
 
