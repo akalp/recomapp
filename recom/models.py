@@ -16,15 +16,21 @@ class PieceBaseModel(models.Model):
     text = models.TextField(null=True, verbose_name="Description")
     wished_by = models.ManyToManyField(to=User, related_name="wishes", blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Point(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="points", verbose_name="User")
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="points", verbose_name="Piece")
     point = models.IntegerField(null=False, verbose_name="Point")
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(null=False) ## FIXME add auto_now
 
     class Meta:
         unique_together = ("user", "piece",)
+
+    def __str__(self):
+        return "{} - {} - {}".format(self.piece.name, self.user.get_full_name(), self.point)
 
 
 class Comment(models.Model):
@@ -88,9 +94,6 @@ class Movie(PieceBaseModel):
     director = models.ForeignKey(to=Director, on_delete=models.CASCADE, related_name="movie")
     genre = models.ForeignKey(to=MovieGenre, on_delete=models.CASCADE, related_name="movie")
     acted_by = models.ManyToManyField(to=Performer, related_name="acts", blank=True)
-
-    def __str__(self):
-        return self.name
 
     
 class Singer(models.Model):

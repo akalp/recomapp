@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}RecoMapp{% endblock %}
+{% block title %}{{ page_title }} | RecoMapp{% endblock %}
 {% block content %}
+    <h1>{{ page_title }}</h1>
     <ul>
         {% for movie in movies %}
-            <li><a href="{% url "recom:movie_detail" pk=movie.pk%}">{{ movie.pk }} - {{ movie }}</a> {% if user.is_superuser %}<a type="button" href="{% url 'recom:movie_delete' pk=movie.pk %}">Delete</a>{% endif %}</li>
+            <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg
+                Point: {{ movie.avg_point }}) {% if movie.counts %}(How many users gave point: {{ movie.counts }}) {% endif %}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
