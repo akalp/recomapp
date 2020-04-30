@@ -102,6 +102,9 @@ class Singer(models.Model):
     photo = models.ImageField(upload_to="singer_photos", default="singer_photos/default_singer.jpg",
                               verbose_name="Photo")
 
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
 
 class Album(models.Model):
     name = models.CharField(null=False, max_length=100, verbose_name="Album Name")
@@ -109,6 +112,9 @@ class Album(models.Model):
     photo = models.ImageField(upload_to="album_photos", default="album_photos/default_album.jpg",
                               verbose_name="Photo")
     singer = models.ForeignKey(to=Singer, on_delete=models.CASCADE, related_name="album")
+
+    def __str__(self):
+        return self.name
 
 
 class MusicGenre(models.Model):
