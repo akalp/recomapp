@@ -1,3 +1,25 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load extras %}
 {% block title %}RecoMapp{% endblock %}
-{% block content %}RecoMapp'e hoşgeldiniz.{% endblock %}
+{% block content %}
+    <h1>Best 10</h1>
+    <ul>
+        {% for piece in bests %}
+            <li><a href="{% get_url pk=piece.pk %}">{{ piece.pk }} - {{ piece }} (Avg Point: {{ piece.avg_point }})</a></li>
+        {% endfor %}
+    </ul>
+
+    <h1>Trend 10</h1>
+    <ul>
+        {% for piece in trends %}
+            <li><a href="{% get_url pk=piece.pk %}">{{ piece.pk }} - {{ piece }} (Avg Point: {{ piece.avg_point }}) (How many user gave point: {{ piece.counts }})</a></li>
+        {% endfor %}
+    </ul>
+
+
+    <h1>Active Users</h1>
+    <ul>
+    {% for user in active_users %}
+        <li>{{ user.get_full_name }} - {{ user.username }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
