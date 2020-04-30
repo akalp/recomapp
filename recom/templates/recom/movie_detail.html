@@ -6,4 +6,12 @@
     <h1>{{ movie.name }}</h1>
     <h2>{{ movie.director }}</h2>
     <h3>{{ movie.publish_date }}</h3>
+
+
+    <h1>Full Support</h1>
+    <ul>
+    {% for user in full_pointers %}
+        <li>{{ user.get_full_name }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}
