@@ -233,7 +233,7 @@ class MusicDetailView(generic.DetailView):
 
 class UserDetailView(generic.DetailView):
     model = get_user_model()
-    context_object_name = 'user'
+    context_object_name = 'user_profile'
     template_name = 'recom/profile.html'
 
 
