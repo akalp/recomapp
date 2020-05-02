@@ -165,7 +165,7 @@ class BookIndex(generic.ListView):
     template_name = 'recom/book_index.html'
     context_object_name = "books"
 
-     def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
         data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
         trending_time = datetime.date.today() - datetime.timedelta(days=7)

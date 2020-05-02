@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }} | RecoMapp{% endblock %}
+{% block content %}
+    <h1>{{ page_title }}</h1>
+    <ul>
+        {% for book in books %}
+            <li><a href="{% url "recom:book_detail" pk=book.pk %}">{{ book.pk }} - {{ book }} (Avg
+                Point: {{ book.avg_point }}) {% if book.counts %}(How many users gave point: {{ book.counts }}) {% endif %}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

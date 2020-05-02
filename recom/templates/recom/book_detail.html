@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ book.name }}|RecoMapp{% endblock %}
+{% block content %}
+    <img src="{{ book.photo.url }}" alt="" height="200px" width="200px">
+    <h1>{{ book.name }}</h1>
+    <h2>{{ book.author }}</h2>
+    <h3>{{ book.publish_date }}</h3>
+
+
+    <h1>Full Support</h1>
+    <ul>
+    {% for user in full_pointers %}
+        <li>{{ user.get_full_name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

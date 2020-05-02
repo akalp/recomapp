@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Music | RecoMapp{% endblock %}
+{% block content %}
+    <h1>Best 10 Music</h1>
+    <ul>
+        {% for music in bests %}
+            <li><a href="{% url "recom:music_detail" pk=music.pk %}">{{ music.pk }} - {{ music }} (Avg Point: {{ music.avg_point }})</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url "recom:music_best" %}">See all best music.</a>
+
+    <h1>Top 10 Trend Music</h1>
+    <ul>
+        {% for music in trends %}
+            <li><a href="{% url "recom:music_detail" pk=music.pk %}">{{ music.pk }} - {{ music }} (Avg Point: {{ music.avg_point }}) (How many user gave point: {{ music.counts }})</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url "recom:music_trend" %}">See all trend music.</a>
+
+
+    <h1>Active Users</h1>
+    <ul>
+    {% for user in active_users %}
+        <li>{{ user.get_full_name }} - {{ user.username }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

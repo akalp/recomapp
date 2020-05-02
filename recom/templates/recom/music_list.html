@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }} | RecoMapp{% endblock %}
+{% block content %}
+    <h1>{{ page_title }}</h1>
+    <ul>
+        {% for song in music %}
+            <li><a href="{% url "recom:music_detail" pk=song.pk %}">{{ song.pk }} - {{ song }} (Avg
+                Point: {{ song.avg_point }}) {% if song.counts %}(How many users gave point: {{ song.counts }}) {% endif %}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

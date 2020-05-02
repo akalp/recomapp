@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Books | RecoMapp{% endblock %}
+{% block content %}
+    <h1>Best 10 Books</h1>
+    <ul>
+        {% for book in bests %}
+            <li><a href="{% url "recom:book_detail" pk=book.pk %}">{{ book.pk }} - {{ book }} (Avg Point: {{ book.avg_point }})</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url "recom:book_best" %}">See all best books.</a>
+
+    <h1>Top 10 Trend Books</h1>
+    <ul>
+        {% for book in trends %}
+            <li><a href="{% url "recom:book_detail" pk=book.pk %}">{{ book.pk }} - {{ book }} (Avg Point: {{ book.avg_point }}) (How many user gave point: {{ book.counts }})</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url "recom:book_trend" %}">See all trend books.</a>
+
+
+    <h1>Active Users</h1>
+    <ul>
+    {% for user in active_users %}
+        <li>{{ user.get_full_name }} - {{ user.username }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
