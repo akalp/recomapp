@@ -18,12 +18,16 @@ from django.urls import path
 from recom import views
 
 from recom.views import IndexView, MovieIndex, MovieDetailView, MovieBestListView, MovieTrendListView, BookIndex, \
-    BookBestListView, BookTrendListView, BookDetailView, MusicIndex, MusicBestListView, MusicTrendListView, MusicDetailView
+    BookBestListView, BookTrendListView, BookDetailView, MusicIndex, MusicBestListView, MusicTrendListView, \
+    MusicDetailView, UserDetailView
 
 app_name = 'recom'
 
 urlpatterns = [
-    path('', IndexView.as_view()),
+    path('register/', views.register, name='register'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('', IndexView.as_view(), name="index"),
     path('movies', MovieIndex.as_view(), name="movie_list"),
     path('movies/best', MovieBestListView.as_view(), name="movie_best"),
     path('movies/trends', MovieTrendListView.as_view(), name="movie_trend"),
@@ -35,5 +39,6 @@ urlpatterns = [
     path('music', MusicIndex.as_view(), name="music_list"),
     path('music/best', MusicBestListView.as_view(), name="music_best"),
     path('music/trends', MusicTrendListView.as_view(), name="music_trend"),
-    path('music/<pk>', MusicDetailView.as_view(), name="music_detail")
+    path('music/<pk>', MusicDetailView.as_view(), name="music_detail"),
+    path('user/<pk>', UserDetailView.as_view(), name="user_detail")
 ]
