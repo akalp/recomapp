@@ -14,9 +14,9 @@ def get_url(pk):
 
 @register.filter
 def is_wished(pk, user):
-    return user.wishes.objects.filter(pk=pk).exists()
+    return user.wishes.filter(pk=pk).exists()
 
 
 @register.filter
 def is_followed(pk, user):
-    return user.follows.objects.filter(pk=pk).exists()
+    return user.follows.filter(pk=pk).exists()
