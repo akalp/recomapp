@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.db.models import Avg, Count, When, Case, IntegerField, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
@@ -15,6 +15,8 @@ from django.views import generic
 
 from recom.models import PieceBaseModel, Movie, Book, Music
 from recom.forms import UserForm
+from recom.templatetags.extras import get_url
+
 
 class IndexView(generic.TemplateView):
     template_name = 'recom/index.html'
@@ -257,7 +259,6 @@ def register(request):
     return render(request=request, template_name='registration.html', context={'user_form': user_form, 'registered': registered})
 
 
-
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('recom:index'))
@@ -280,3 +281,35 @@ def user_login(request):
             return render(request=request, template_name='login.html', context={'error': True})
     else:
         return render(request=request, template_name='login.html')
+
+
+@login_required
+def wish(request, pk):
+    piece = PieceBaseModel.objects.get(pk=pk)
+    request.user.wishes.add(piece)
+    request.user.save()
+    return HttpResponseRedirect(get_url(pk))
+
+
+@login_required
+def del_wish(request, pk):
+    piece = PieceBaseModel.objects.get(pk=pk)
+    request.user.wishes.remove(piece)
+    request.user.save()
+    return HttpResponseRedirect(get_url(pk))
+
+
+@login_required
+def follow_user(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    user.followed_by.add(request.user)
+    user.save()
+    return redirect('recom:user_detail', pk=user.pk)
+
+
+@login_required
+def unfollow_user(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    user.followed_by.remove(request.user)
+    user.save()
+    return redirect('recom:user_detail', pk=user.pk)
