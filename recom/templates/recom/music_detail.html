@@ -1,19 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'recom/piece_detail.html' %}
 {% load static %}
-{% block title %}{{ music.name }}|RecoMapp{% endblock %}
-{% block content %}
-    <img src="{{ music.photo.url }}" alt="" height="200px" width="200px">
-    <h1>{{ music.name }}</h1>
-    <h2>{{ music.album }}</h2>
-    <h3>{{ music.genre }}</h3>
-    <h3>{{ music.publish_date }}</h3>
-    <h3>{{ music.text }}</h3>
-
-
-    <h1>Full Support</h1>
-    <ul>
-    {% for user in full_pointers %}
-        <li>{{ user.get_full_name }}</li>
-    {% endfor %}
-    </ul>
+{% block extra_info %}
+    <h2>{{ object.album }}</h2>
+    <h3>{{ object.genre }}</h3>
 {% endblock %}

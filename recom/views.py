@@ -94,7 +94,6 @@ class MovieIndex(generic.ListView):
 
 class MovieDetailView(generic.DetailView):
     model = Movie
-    context_object_name = 'movie'
     template_name = 'recom/movie_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -209,7 +208,6 @@ class MusicIndex(generic.ListView):
 
 class BookDetailView(generic.DetailView):
     model = Book
-    context_object_name = 'book'
     template_name = 'recom/book_detail.html'
     
     def get_context_data(self, **kwargs):
@@ -221,7 +219,6 @@ class BookDetailView(generic.DetailView):
 
 class MusicDetailView(generic.DetailView):
     model = Music
-    context_object_name = 'music'
     template_name = 'recom/music_detail.html'
 
     def get_context_data(self, **kwargs):
