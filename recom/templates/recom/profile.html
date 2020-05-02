@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ user.get_full_name }} | RecoMapp{% endblock %}
+{% block content %}
+    <img src="{{ user.profile_photo.url }}" alt="" height="200px" width="200px">
+    <h1>Name: {{ user.get_full_name }}</h1>
+    <h2>Birthday: {{ user.birthday }}</h2>
+
+
+    <h1>Wishes</h1>
+    <ul>
+    {% for p in user.wishes.all %}
+        <li>{{ p }}</li>
+    {% empty %}
+        <li>There is no wished piece.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

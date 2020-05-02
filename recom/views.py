@@ -1,16 +1,20 @@
 import datetime
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.db.models import Avg, Count, When, Case, IntegerField, Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
+from django.urls import reverse
 from django.views import generic
 
 
 from recom.models import PieceBaseModel, Movie, Book, Music
-
+from recom.forms import UserForm
 
 class IndexView(generic.TemplateView):
     template_name = 'recom/index.html'
@@ -223,3 +227,56 @@ class MusicDetailView(generic.DetailView):
         data["full_pointers"] = get_user_model().objects.filter(
             Q(points__point=5) & Q(points__piece_id=kwargs['object']))
         return data
+
+
+class UserDetailView(generic.DetailView):
+    model = get_user_model()
+    context_object_name = 'user'
+    template_name = 'recom/profile.html'
+
+
+def register(request):
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        print(request.FILES)
+        if user_form.is_valid():
+            new_user = user_form.save(commit=False)
+
+            if 'profile_photo' in request.FILES:
+                print("test")
+                new_user.profile_photo = request.FILES['profile_photo']
+            new_user.save()
+            registered = True
+            next = request.GET.get('next')
+            return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk':new_user.pk}))
+    else:
+        user_form = UserForm()
+
+    return render(request=request, template_name='registration.html', context={'user_form': user_form, 'registered': registered})
+
+
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('recom:index'))
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(username)
+        print(password)
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            next = request.GET.get('next')
+            return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk':user.pk}))
+        else:
+            return render(request=request, template_name='login.html', context={'error': True})
+    else:
+        return render(request=request, template_name='login.html')
