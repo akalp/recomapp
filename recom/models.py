@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+import datetime
 
 # Create your models here.
 class User(AbstractUser):
@@ -24,7 +24,7 @@ class Point(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="points", verbose_name="User")
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="points", verbose_name="Piece")
     point = models.IntegerField(null=False, verbose_name="Point")
-    date = models.DateTimeField(null=False) ## FIXME add auto_now
+    date = models.DateTimeField(null=False, default= datetime.datetime.now()) ## FIXME add auto_now
 
     class Meta:
         unique_together = ("user", "piece",)
@@ -49,6 +49,9 @@ class Author(models.Model):
     last_name = models.CharField(null=False, max_length=100, verbose_name="Last Name")
     photo = models.ImageField(upload_to="author_photos", default="author_photos/default_author.jpg",
                               verbose_name="Photo")
+
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
 
 
 class BookGenre(models.Model):
