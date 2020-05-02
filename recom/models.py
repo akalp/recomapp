@@ -6,6 +6,7 @@ import datetime
 class User(AbstractUser):
     birthday = models.DateField(null=True, verbose_name="Birthday")
     profile_photo = models.ImageField(upload_to="profile_photos", default="profile_photos/default_profile.jpg", verbose_name="Profile Photo")
+    follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False, blank=True)
 
 
 class PieceBaseModel(models.Model):
