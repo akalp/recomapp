@@ -16,8 +16,9 @@ Including another URLconf
 from django.urls import path
 
 from recom import views
+
 from recom.views import IndexView, MovieIndex, MovieDetailView, MovieBestListView, MovieTrendListView, BookIndex, \
-    BookBestListView, BookTrendListView, BookDetailView
+    BookBestListView, BookTrendListView, BookDetailView, MusicIndex, MusicBestListView, MusicTrendListView, MusicDetailView
 
 app_name = 'recom'
 
@@ -31,4 +32,8 @@ urlpatterns = [
     path('books/best', BookBestListView.as_view(), name="book_best"),
     path('books/trends', BookTrendListView.as_view(), name="book_trend"),
     path('books/<pk>', BookDetailView.as_view(), name="book_detail"),
+    path('music', MusicIndex.as_view(), name="music_list"),
+    path('music/best', MusicBestListView.as_view(), name="music_best"),
+    path('music/trends', MusicTrendListView.as_view(), name="music_trend"),
+    path('music/<pk>', MusicDetailView.as_view(), name="music_detail")
 ]
