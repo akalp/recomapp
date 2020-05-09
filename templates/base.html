@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,12 +8,68 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
     {% block style %} {% endblock %}
 
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
-{% block content %}{% endblock %}
+<body class="d-flex flex-column h-100">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="{% url 'recom:index' %}">RecoMapp</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recom:movie_list' %}">Movie</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recom:book_list' %}">Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recom:music_list' %}">Music</a>
+                </li>
+            </ul>
+            <form class="form-inline mt-2 mt-md-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            </form>
+            {% if not user.is_authenticated %}
+                <a class="btn btn-outline-primary ml-1" href="{% url 'recom:login_register' %}"><i class="fas fa-sign-in-alt"></i> Login / Sign up</a>
+            {% else %}
+
+                <div class="dropdown">
+                    <a class="btn btn-secondary btn-md dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded-circle" style="max-width: 1.5em" src="{{ user.profile_photo.url }}" /> {{ user.get_full_name}}
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'recom:user_detail' pk=user.pk %}"><i class="fas fa-user fa-sm"></i> Profile</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-user-cog fa-sm"></i>Settings</a>
+                        <a class="dropdown-item" href="{% url 'recom:logout' %}"><i class="fas fa-sign-out-alt fa-sm"></i> Logout</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+
+<main role="main" class="flex-shrink-0">
+    <div class="container" style="padding: 60px 15px 0;">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+
+<footer class="footer mt-auto py-3" style="background-color: lightgray">
+    <div class="container">
+        <span class="text-muted">Coded with <i class="fas fa-heart"></i> by DjangoChamp&copy;.</span>
+    </div>
+</footer>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
