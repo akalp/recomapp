@@ -5,13 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.db.models import Avg, Count, When, Case, IntegerField, Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
 from django.views import generic
-
 
 from recom.models import PieceBaseModel, Movie, Book, Music
 from recom.forms import UserForm
@@ -107,7 +106,7 @@ class BookBestListView(generic.ListView):
     model = Book
     template_name = 'recom/book_list.html'
     context_object_name = "books"
-    
+
     def get_queryset(self):
         return self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')
 
@@ -115,7 +114,7 @@ class BookBestListView(generic.ListView):
         data = super().get_context_data(*args, **kwargs)
         data["page_title"] = "Best Books"
         return data
-      
+
 
 class MusicBestListView(generic.ListView):
     model = Music
@@ -135,7 +134,7 @@ class BookTrendListView(generic.ListView):
     model = Book
     template_name = 'recom/book_list.html'
     context_object_name = "books"
-    
+
     def get_queryset(self):
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         return self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
@@ -209,13 +208,13 @@ class MusicIndex(generic.ListView):
 class BookDetailView(generic.DetailView):
     model = Book
     template_name = 'recom/book_detail.html'
-    
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["full_pointers"] = get_user_model().objects.filter(
             Q(points__point=5) & Q(points__piece_id=kwargs['object']))
         return data
-      
+
 
 class MusicDetailView(generic.DetailView):
     model = Music
@@ -234,50 +233,53 @@ class UserDetailView(generic.DetailView):
     template_name = 'recom/profile.html'
 
 
-def register(request):
+def login_register(request):
     registered = False
 
-    if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-        print(request.FILES)
-        if user_form.is_valid():
-            new_user = user_form.save(commit=False)
-
-            if 'profile_photo' in request.FILES:
-                print("test")
-                new_user.profile_photo = request.FILES['profile_photo']
-            new_user.save()
-            registered = True
-            next = request.GET.get('next')
-            return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk':new_user.pk}))
-    else:
+    if request.method == 'GET':
         user_form = UserForm()
+        return render(request=request, template_name='login_register.html',
+                      context={'user_form': user_form, 'registered': registered, 'from_log': True})
+    else:
+        where = request.GET["from"]
+        if where == "login":
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            print(username)
+            print(password)
 
-    return render(request=request, template_name='registration.html', context={'user_form': user_form, 'registered': registered})
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                next = request.GET.get('next')
+                return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk': user.pk}))
+            else:
+                user_form = UserForm()
+                return render(request=request, template_name='login_register.html',
+                              context={'error': True, 'user_form': user_form, 'from_log': True})
+        elif where == "register":
+            user_form = UserForm(data=request.POST)
+            print(request.FILES)
+            if user_form.is_valid():
+                new_user = user_form.save(commit=False)
+
+                if 'profile_photo' in request.FILES:
+                    print("test")
+                    new_user.profile_photo = request.FILES['profile_photo']
+                new_user.save()
+                registered = True
+                next = request.GET.get('next')
+                return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk': new_user.pk}))
+            return render(request=request, template_name='login_register.html',
+                          context={'user_form': user_form, 'registered': registered, 'from_reg': True})
+        else:
+            HttpResponse("Impossible!")
 
 
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('recom:index'))
-
-
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        print(username)
-        print(password)
-
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            next = request.GET.get('next')
-            return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk':user.pk}))
-        else:
-            return render(request=request, template_name='login.html', context={'error': True})
-    else:
-        return render(request=request, template_name='login.html')
 
 
 @login_required

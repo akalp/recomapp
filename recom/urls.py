@@ -24,8 +24,7 @@ from recom.views import IndexView, MovieIndex, MovieDetailView, MovieBestListVie
 app_name = 'recom'
 
 urlpatterns = [
-    path('register/', views.register, name='register'),
-    path('login/', views.user_login, name='login'),
+    path('login_register/', views.login_register, name='login_register'),
     path('logout/', views.user_logout, name='logout'),
     path('', IndexView.as_view(), name="index"),
     path('movies', MovieIndex.as_view(), name="movie_list"),

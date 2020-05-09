@@ -1,0 +1,145 @@
+{% extends 'base.html' %} {% load static crispy_forms_filters %}
+{% block title %}Login / Sign Up | RecoMapp{% endblock %}
+
+{% block style %}
+    <style>
+        #myTab {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            float: left;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #myTab > li {
+            float: left;
+            width: 50%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {% if from_log %}active {% endif %}" id="login-tab" data-toggle="tab" href="#login" role="tab"
+                       aria-controls="login"
+                       aria-selected="true">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  {% if from_reg %}active {% endif %}" id="signup-tab" data-toggle="tab" href="#signup" role="tab"
+                       aria-controls="signup"
+                       aria-selected="false">Sign Up</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade {% if from_log %}show active{% endif %}" id="login" role="tabpanel" aria-labelledby="login-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if not registered and not user.is_authenticated %}
+                                <form action="{% url 'recom:login_register' %}?from=login" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        <input class="form-control" type="text" id="username" name="username"
+                                               placeholder="Username">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Password</label>
+                                        <input class="form-control" type="password" id="password" name="password"
+                                               placeholder="Password">
+                                    </div>
+                                    <input class="btn btn-primary float-right" type="submit" value="Login">
+                                </form>
+                            {% else %}
+                                <h1>You are already logged in, {{ user.username }}</h1>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if error %}
+                        <div class="alert alert-danger mt-4" role="alert">
+                            Invalid login details given
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade  {% if from_reg %}show active{% endif %}" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if not registered and not user.is_authenticated %}
+                                <form action="{% url 'recom:login_register' %}?from=register" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ user_form|crispy }}
+                                    <input class="btn btn-success float-right" type="submit" value="Register">
+                                </form>
+                            {% else %}
+                                <h1>You are already registered, {{ user.username }}</h1>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#    <div class="row">#}
+    {#        <div class="col-6">#}
+    {#            <div class="card">#}
+    {#                <div class="card-header">Login</div>#}
+    {#                <div class="card-body">#}
+    {#                    {% if not registered and not user.is_authenticated %}#}
+    {#                        <form action="{% url 'recom:login' %}" method="post">#}
+    {#                            {% csrf_token %}#}
+    {#                            <div class="form-group">#}
+    {#                                <label for="username">Username</label>#}
+    {#                                <input class="form-control" type="text" id="username" name="username"#}
+    {#                                       placeholder="Username">#}
+    {#                            </div>#}
+    {#                            <div class="form-group">#}
+    {#                                <label for="password">Password</label>#}
+    {#                                <input class="form-control" type="password" id="password" name="password"#}
+    {#                                       placeholder="Password">#}
+    {#                            </div>#}
+    {#                            <input class="btn btn-primary float-right" type="submit" value="Login">#}
+    {#                        </form>#}
+    {#                    {% else %}#}
+    {#                        <h1>You are already logged in, {{ user.username }}</h1>#}
+    {#                    {% endif %}#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            {% if error %}#}
+    {#                <div class="alert alert-danger mt-4" role="alert">#}
+    {#                    Invalid login details given#}
+    {#                </div>#}
+    {#            {% endif %}#}
+    {#        </div>#}
+    {#        <div class="col-6">#}
+    {#            <div class="card">#}
+    {#                <div class="card-header">Register</div>#}
+    {#                <div class="card-body">#}
+    {#                    {% if not registered and not user.is_authenticated %}#}
+    {#                        <form action="{% url 'recom:register' %}" method="post" enctype="multipart/form-data">#}
+    {#                            {% csrf_token %}#}
+    {#                            {{ user_form|crispy }}#}
+    {#                            <input class="btn btn-success float-right" type="submit" value="Register">#}
+    {#                        </form>#}
+    {#                    {% else %}#}
+    {#                        <h1>You are already registered, {{ user.username }}</h1>#}
+    {#                    {% endif %}#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('#div_id_birthday').find('div').addClass("d-flex flex-row")
+        });
+    </script>
+{% endblock %}
