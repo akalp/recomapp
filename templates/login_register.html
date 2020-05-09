@@ -84,56 +84,6 @@
             </div>
         </div>
     </div>
-
-    {#    <div class="row">#}
-    {#        <div class="col-6">#}
-    {#            <div class="card">#}
-    {#                <div class="card-header">Login</div>#}
-    {#                <div class="card-body">#}
-    {#                    {% if not registered and not user.is_authenticated %}#}
-    {#                        <form action="{% url 'recom:login' %}" method="post">#}
-    {#                            {% csrf_token %}#}
-    {#                            <div class="form-group">#}
-    {#                                <label for="username">Username</label>#}
-    {#                                <input class="form-control" type="text" id="username" name="username"#}
-    {#                                       placeholder="Username">#}
-    {#                            </div>#}
-    {#                            <div class="form-group">#}
-    {#                                <label for="password">Password</label>#}
-    {#                                <input class="form-control" type="password" id="password" name="password"#}
-    {#                                       placeholder="Password">#}
-    {#                            </div>#}
-    {#                            <input class="btn btn-primary float-right" type="submit" value="Login">#}
-    {#                        </form>#}
-    {#                    {% else %}#}
-    {#                        <h1>You are already logged in, {{ user.username }}</h1>#}
-    {#                    {% endif %}#}
-    {#                </div>#}
-    {#            </div>#}
-    {#            {% if error %}#}
-    {#                <div class="alert alert-danger mt-4" role="alert">#}
-    {#                    Invalid login details given#}
-    {#                </div>#}
-    {#            {% endif %}#}
-    {#        </div>#}
-    {#        <div class="col-6">#}
-    {#            <div class="card">#}
-    {#                <div class="card-header">Register</div>#}
-    {#                <div class="card-body">#}
-    {#                    {% if not registered and not user.is_authenticated %}#}
-    {#                        <form action="{% url 'recom:register' %}" method="post" enctype="multipart/form-data">#}
-    {#                            {% csrf_token %}#}
-    {#                            {{ user_form|crispy }}#}
-    {#                            <input class="btn btn-success float-right" type="submit" value="Register">#}
-    {#                        </form>#}
-    {#                    {% else %}#}
-    {#                        <h1>You are already registered, {{ user.username }}</h1>#}
-    {#                    {% endif %}#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
-
 {% endblock %}
 
 {% block javascript %}
