@@ -37,6 +37,20 @@ class IndexView(generic.TemplateView):
         return data
 
 
+class MovieListView(generic.ListView):
+    model = Movie
+    template_name = 'recom/movie_list.html'
+    context_object_name = "movies"
+
+    def get_queryset(self):
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["page_title"] = "Movies"
+        return data
+
+
 class MovieBestListView(generic.ListView):
     model = Movie
     template_name = 'recom/movie_list.html'
@@ -74,10 +88,14 @@ class MovieIndex(generic.ListView):
     template_name = 'recom/movie_index.html'
     context_object_name = "movies"
 
+    def get_queryset(self):
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:11]
+
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
 
-        data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+        data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
 
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
@@ -87,7 +105,7 @@ class MovieIndex(generic.ListView):
 
         act_user_query = "select u.*, count(p.id) as count from recom_{} m, recom_piecebasemodel b, recom_point p, recom_user u where m.piecebasemodel_ptr_id = b.id and p.piece_id=b.id and p.user_id=u.id group by u.id order by count desc".format(
             "movie")
-        data["active_users"] = get_user_model().objects.raw(act_user_query)
+        data["active_users"] = get_user_model().objects.raw(act_user_query)[:11]
         return data
 
 
@@ -102,6 +120,20 @@ class MovieDetailView(generic.DetailView):
         return data
 
 
+class BookListView(generic.ListView):
+    model = Book
+    template_name = 'recom/book_list.html'
+    context_object_name = "books"
+
+    def get_queryset(self):
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["page_title"] = "Books"
+        return data
+
+
 class BookBestListView(generic.ListView):
     model = Book
     template_name = 'recom/book_list.html'
@@ -113,6 +145,20 @@ class BookBestListView(generic.ListView):
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
         data["page_title"] = "Best Books"
+        return data
+
+
+class MusicListView(generic.ListView):
+    model = Music
+    template_name = 'recom/music_list.html'
+    context_object_name = "musics"
+
+    def get_queryset(self):
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["page_title"] = "Musics"
         return data
 
 
@@ -169,6 +215,9 @@ class BookIndex(generic.ListView):
     template_name = 'recom/book_index.html'
     context_object_name = "books"
 
+    def get_queryset(self):
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:11]
+
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
         data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
@@ -188,6 +237,9 @@ class MusicIndex(generic.ListView):
     model = Music
     template_name = 'recom/music_index.html'
     context_object_name = "music"
+
+    def get_queryset(self):
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:11]
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)

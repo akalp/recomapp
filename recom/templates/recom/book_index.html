@@ -1,27 +1,99 @@
 {% extends 'base.html' %}
 {% block title %}Books | RecoMapp{% endblock %}
 {% block content %}
-    <h1>Best 10 Books</h1>
-    <ul>
-        {% for book in bests %}
-            <li><a href="{% url "recom:book_detail" pk=book.pk %}">{{ book.pk }} - {{ book }} (Avg Point: {{ book.avg_point }})</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url "recom:book_best" %}">See all best books.</a>
+    <div class="card">
+        <div class="card-header">
+            <h4>Best 10 Books</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for book in bests %}
+                    <a href="{% url 'recom:book_detail' pk=book.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ book.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ book }}</h6>
+                                <p class="text-muted">{{ book.genre.name }} {{ book.avg_point }}</p>
+                                <p class="card-text">{{ book.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:book_best" %}">See all best books.</a>
+        </div>
+    </div>
 
-    <h1>Top 10 Trend Books</h1>
-    <ul>
-        {% for book in trends %}
-            <li><a href="{% url "recom:book_detail" pk=book.pk %}">{{ book.pk }} - {{ book }} (Avg Point: {{ book.avg_point }}) (How many user gave point: {{ book.counts }})</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url "recom:book_trend" %}">See all trend books.</a>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Trend 10 Books</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for book in trends %}
+                    <a href="{% url 'recom:book_detail' pk=book.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ book.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ book }}</h6>
+                                <p class="card-text text-muted">{{ book.genre.name }} {{ book.avg_point }}</p>
+                                <p class="card-text">How many user gave point: {{ book.counts }}</p>
+                                <p class="card-text">{{ book.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:book_trend" %}">See all trend books.</a>
+        </div>
+    </div>
 
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Books</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for book in books %}
+                    <a href="{% url 'recom:book_detail' pk=book.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ book.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ book }}</h6>
+                                <p class="text-muted">{{ book.genre.name }} {{ book.avg_point|default:0 }}</p>
+                                <p class="card-text">{{ book.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:book_list" %}">See all books.</a>
+        </div>
+    </div>
 
-    <h1>Active Users</h1>
-    <ul>
-    {% for user in active_users %}
-        <li>{{ user.get_full_name }} - {{ user.username }}</li>
-    {% endfor %}
-    </ul>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4>Active Users</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for user in active_users %}
+                    <a href="{% url 'recom:user_detail' pk=user.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ user.profile_photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ user.username }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

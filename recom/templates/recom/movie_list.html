@@ -5,7 +5,7 @@
     <ul>
         {% for movie in movies %}
             <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg
-                Point: {{ movie.avg_point }}) {% if movie.counts %}(How many users gave point: {{ movie.counts }}) {% endif %}</a></li>
+                Point: {{ movie.avg_point|default:0 }}) {% if movie.counts %}(How many users gave point: {{ movie.counts }}) {% endif %}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

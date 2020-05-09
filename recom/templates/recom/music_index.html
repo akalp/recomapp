@@ -1,27 +1,99 @@
 {% extends 'base.html' %}
 {% block title %}Music | RecoMapp{% endblock %}
 {% block content %}
-    <h1>Best 10 Music</h1>
-    <ul>
-        {% for music in bests %}
-            <li><a href="{% url "recom:music_detail" pk=music.pk %}">{{ music.pk }} - {{ music }} (Avg Point: {{ music.avg_point }})</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url "recom:music_best" %}">See all best music.</a>
+    <div class="card">
+        <div class="card-header">
+            <h4>Best 10 Musics</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for music in bests %}
+                    <a href="{% url 'recom:music_detail' pk=music.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ music.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ music }}</h6>
+                                <p class="text-muted">{{ music.genre.name }} {{ music.avg_point }}</p>
+                                <p class="card-text">{{ music.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:music_best" %}">See all best musics.</a>
+        </div>
+    </div>
 
-    <h1>Top 10 Trend Music</h1>
-    <ul>
-        {% for music in trends %}
-            <li><a href="{% url "recom:music_detail" pk=music.pk %}">{{ music.pk }} - {{ music }} (Avg Point: {{ music.avg_point }}) (How many user gave point: {{ music.counts }})</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url "recom:music_trend" %}">See all trend music.</a>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Trend 10 Musics</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for music in trends %}
+                    <a href="{% url 'recom:music_detail' pk=music.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ music.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ music }}</h6>
+                                <p class="card-text text-muted">{{ music.genre.name }} {{ music.avg_point }}</p>
+                                <p class="card-text">How many user gave point: {{ music.counts }}</p>
+                                <p class="card-text">{{ music.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:music_trend" %}">See all trend musics.</a>
+        </div>
+    </div>
 
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Musics</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for music in musics %}
+                    <a href="{% url 'recom:music_detail' pk=music.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ music.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ music }}</h6>
+                                <p class="text-muted">{{ music.genre.name }} {{ music.avg_point|default:0 }}</p>
+                                <p class="card-text">{{ music.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:music_list" %}">See all musics.</a>
+        </div>
+    </div>
 
-    <h1>Active Users</h1>
-    <ul>
-    {% for user in active_users %}
-        <li>{{ user.get_full_name }} - {{ user.username }}</li>
-    {% endfor %}
-    </ul>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4>Active Users</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for user in active_users %}
+                    <a href="{% url 'recom:user_detail' pk=user.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ user.profile_photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ user.username }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,27 +1,100 @@
 {% extends 'base.html' %}
 {% block title %}Movies | RecoMapp{% endblock %}
 {% block content %}
-    <h1>Best 10 Movies</h1>
-    <ul>
-        {% for movie in bests %}
-            <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg Point: {{ movie.avg_point }})</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url "recom:movie_best" %}">See all best movies.</a>
+    <div class="card">
+        <div class="card-header">
+            <h4>Best 10 Movies</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for movie in bests %}
+                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ movie.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ movie }}</h6>
+                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point }}</p>
+                                <p class="card-text">{{ movie.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:movie_best" %}">See all best movies.</a>
+        </div>
+    </div>
 
-    <h1>Top 10 Trend Movies</h1>
-    <ul>
-        {% for movie in trends %}
-            <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg Point: {{ movie.avg_point }}) (How many user gave point: {{ movie.counts }})</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url "recom:movie_trend" %}">See all trend movies.</a>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Trend 10 Movies</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for movie in trends %}
+                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ movie.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ movie }}</h6>
+                                <p class="card-text text-muted">{{ movie.genre.name }} {{ movie.avg_point }}</p>
+                                <p class="card-text">How many user gave point: {{ movie.counts }}</p>
+                                <p class="card-text">{{ movie.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:movie_trend" %}">See all trend movies.</a>
+        </div>
+    </div>
 
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Movies</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for movie in movies %}
+                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ movie.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ movie }}</h6>
+                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
+                                <p class="card-text">{{ movie.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url "recom:movie_list" %}">See all movies.</a>
+        </div>
+    </div>
 
-    <h1>Active Users</h1>
-    <ul>
-    {% for user in active_users %}
-        <li>{{ user.get_full_name }} - {{ user.username }}</li>
-    {% endfor %}
-    </ul>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4>Active Users</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for user in active_users %}
+                    <a href="{% url 'recom:user_detail' pk=user.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ user.profile_photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ user.username }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
