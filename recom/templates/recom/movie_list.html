@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 {% block title %}{{ page_title }} | RecoMapp{% endblock %}
 {% block content %}
-    <h1>{{ page_title }}</h1>
-    <ul>
-        {% for movie in movies %}
-            <li><a href="{% url "recom:movie_detail" pk=movie.pk %}">{{ movie.pk }} - {{ movie }} (Avg
-                Point: {{ movie.avg_point|default:0 }}) {% if movie.counts %}(How many users gave point: {{ movie.counts }}) {% endif %}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="card">
+        <div class="card-header">
+            <h4>{{ page_title }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for movie in movies %}
+                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ movie.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ movie }}</h6>
+                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
+                                <p class="card-text">{{ movie.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
