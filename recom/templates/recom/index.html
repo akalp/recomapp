@@ -1,25 +1,70 @@
 {% extends 'base.html' %} {% load extras %}
 {% block title %}RecoMapp{% endblock %}
 {% block content %}
-    <h1>Best 10</h1>
-    <ul>
-        {% for piece in bests %}
-            <li><a href="{% get_url pk=piece.pk %}">{{ piece.pk }} - {{ piece }} (Avg Point: {{ piece.avg_point }})</a></li>
-        {% endfor %}
-    </ul>
+    
+    
+     <div class="card">
+        <div class="card-header">
+            <h4>Best 10 Pieces</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for piece in bests %}
+                    <a href="{% get_url pk=piece.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ piece.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ piece }}</h6>
+                                <p class="text-muted">{{ piece.genre.name }} {{ piece.avg_point }}</p>
+                                <p class="card-text">{{ piece.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-    <h1>Trend 10</h1>
-    <ul>
-        {% for piece in trends %}
-            <li><a href="{% get_url pk=piece.pk %}">{{ piece.pk }} - {{ piece }} (Avg Point: {{ piece.avg_point }}) (How many user gave point: {{ piece.counts }})</a></li>
-        {% endfor %}
-    </ul>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Trend 10 Pieces</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for piece in trends %}
+                    <a href="{% get_url pk=piece.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ piece.photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ piece }}</h6>
+                                <p class="card-text text-muted">{{ piece.genre.name }} {{ piece.avg_point }}</p>
+                                <p class="card-text">How many user gave point: {{ piece.counts }}</p>
+                                <p class="card-text">{{ piece.publish_date }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-
-    <h1>Active Users</h1>
-    <ul>
-    {% for user in active_users %}
-        <li>{{ user.get_full_name }} - {{ user.username }}</li>
-    {% endfor %}
-    </ul>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4>Active Users</h4>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-5">
+                {% for user in active_users %}
+                    <a href="{% url 'recom:user_detail' pk=user.pk %}">
+                        <div class="card mb-2 mx-2">
+                            <img src="{{ user.profile_photo.url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ user.username }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
