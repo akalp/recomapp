@@ -329,7 +329,7 @@ def login_register(request):
                 new_user.save()
                 registered = True
                 next = request.GET.get('next')
-                return HttpResponseRedirect(next if next else reverse('recom:user_detail', kwargs={'pk': new_user.pk}))
+                return HttpResponseRedirect(next if next else reverse('recom:login_register'))
             return render(request=request, template_name='login_register.html',
                           context={'user_form': user_form, 'registered': registered, 'from_reg': True})
         else:
