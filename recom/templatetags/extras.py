@@ -12,6 +12,14 @@ def get_url(pk):
             return reverse("recom:{}_detail".format(model.__name__.lower()), args=(pk,))
 
 
+@register.simple_tag
+def get_genre(pk):
+    for model in [Movie, Book, Music]:
+        piece = model.objects.filter(pk=pk)
+        if piece.exists():
+            return piece.first().genre.name
+
+
 @register.filter
 def is_wished(pk, user):
     return user.wishes.filter(pk=pk).exists()

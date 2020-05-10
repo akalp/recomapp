@@ -15,7 +15,7 @@
                             <img src="{{ piece.photo.url }}" class="card-img-top">
                             <div class="card-body">
                                 <h6 class="card-title">{{ piece }}</h6>
-                                <p class="text-muted">{{ piece.genre.name }} {{ piece.avg_point|default:0 }}</p>
+                                <p class="text-muted">{% get_genre pk=piece.pk %} {{ piece.avg_point|default:0 }}</p>
                                 <p class="card-text">{{ piece.publish_date }}</p>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                             <img src="{{ piece.photo.url }}" class="card-img-top">
                             <div class="card-body">
                                 <h6 class="card-title">{{ piece }}</h6>
-                                <p class="card-text text-muted">{{ piece.genre.name }} {{ piece.avg_point|default:0 }}</p>
+                                <p class="card-text text-muted">{% get_genre pk=piece.pk %} {{ piece.avg_point|default:0 }}</p>
                                 <p class="card-text">How many user gave point: {{ piece.counts }}</p>
                                 <p class="card-text">{{ piece.publish_date }}</p>
                             </div>
