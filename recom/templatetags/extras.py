@@ -22,7 +22,11 @@ def get_genre(pk):
 
 @register.simple_tag
 def get_point(object, user):
-    return object.points.filter(user=user).first().point
+    query = object.points.filter(user=user)
+    if query.exists():
+        return query.first().point
+    else:
+        return 0
 
 
 @register.filter
