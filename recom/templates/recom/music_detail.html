@@ -1,6 +1,7 @@
 {% extends 'recom/piece_detail.html' %}
-{% load static %}
-{% block extra_info %}
-    <h2>{{ object.album }}</h2>
-    <h3>{{ object.genre }}</h3>
+{% block info1 %}
+    <p class="card-text text-muted">by {{ object.album.singer }}</p>
+{% endblock %}
+{% block info2 %}
+    <p class="card-text">Album: {{ object.album }}</p>
 {% endblock %}

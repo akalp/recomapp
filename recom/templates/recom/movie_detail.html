@@ -1,8 +1,8 @@
 {% extends 'recom/piece_detail.html' %}
 {% load static %}
-{% block extra_info %}
-    <h2>{{ object.director }}</h2>
-    <h3>{{ object.genre }}</h3>
-
+{% block info1 %}
+    <p class="card-text text-muted">by {{ object.director }}</p>
+{% endblock %}
+{% block info2 %}
 {#TODO    performer ekle #}
 {% endblock %}

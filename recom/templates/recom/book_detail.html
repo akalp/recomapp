@@ -1,6 +1,4 @@
 {% extends 'recom/piece_detail.html' %}
-{% load static %}
-{% block extra_info %}
-    <h2>{{ object.author }}</h2>
-    <h3>{{ object.genre }}</h3>
+{% block info1 %}
+    <h2>by {{ object.author }}</h2>
 {% endblock %}

@@ -1,23 +1,67 @@
 {% extends 'base.html' %}
 {% load static extras %}
-{% block title %}{{ object.name }}|RecoMapp{% endblock %}
+{% block title %}{{ object.name }} | RecoMapp{% endblock %}
 {% block content %}
-    <img src="{{ object.photo.url }}" alt="" height="200px" width="200px">
-    <h1>{{ object.name }}</h1>
-    {% if user.is_authenticated %}
-        {% if object.pk|is_wished:user %}
-            <a type="button" href="{% url 'recom:del_wish' pk=object.pk %}">Unwish</a>
-            {% else %}
-            <a type="button" href="{% url 'recom:wish' pk=object.pk %}">Wish</a>
-            {% endif %}
-    {% endif %}
-    <h3>{{ object.publish_date }}</h3>
-    <h3>{{ object.text }}</h3>
-    {% block extra_info %}{% endblock %}
-    <h1>Full Support</h1>
-    <ul>
-    {% for user in full_pointers %}
-        <li>{{ user.get_full_name }}</li>
-    {% endfor %}
-    </ul>
+
+    <div class="row h-100">
+        <div class="col-5">
+            <div id="piece-info" class="card">
+                <div class="card-body">
+                    {% if object.photo %}
+                        <img src="{{ object.photo.url }}" class="card-image-top" height="200px" width="200px">
+                    {% endif %}
+
+                    <h4 class="card-title">{{ object.name }}</h4>
+                    <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
+
+                    {% block info1 %}{% endblock %}
+
+                    {% if user.is_authenticated %}
+                        {% if object.pk|is_wished:user %}
+                            <a class="btn btn-sm btn-danger" type="button"
+                               href="{% url 'recom:del_wish' pk=object.pk %}"><i class="fas fa-minus"></i>
+                                Unwish: {{ object.wished_by.all.count }}</a>
+                        {% else %}
+                            <a class="btn btn-sm btn-success" type="button"
+                               href="{% url 'recom:wish' pk=object.pk %}"><i class="fas fa-plus"></i>
+                                Wish: {{ object.wished_by.all.count }}</a>
+                        {% endif %}
+                    {% endif %}
+
+                    <p class="card-text">{{ object.text }}</p>
+
+                    {% block info2 %}{% endblock %}
+
+
+                    <h6>Full Support</h6>
+                    <ul>
+                        {% for user in full_pointers %}
+                            <li>{{ user.get_full_name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-7">
+            {% for i in ''|center:10 %}
+                <div class="card mb-3">
+                    <div class="card-header">Kullanıcın Adı</div>
+                    <div class="card-body">Yorumun ilk 50 kelimesi</div>
+                    <div class="card-footer"><a href="">Yorumun tamamını okuması için link</a></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(window).scroll(function () {
+            $("#piece-info").css({
+                "top": ($(window).scrollTop()) + "px",
+                "left": ($(window).scrollLeft()) + "px"
+            });
+        });
+    </script>
 {% endblock %}
