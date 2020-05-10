@@ -13,7 +13,7 @@
                             <img src="{{ movie.photo.url }}" class="card-img-top">
                             <div class="card-body">
                                 <h6 class="card-title">{{ movie }}</h6>
-                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point }}</p>
+                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
                                 <p class="card-text">{{ movie.publish_date }}</p>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                             <img src="{{ movie.photo.url }}" class="card-img-top">
                             <div class="card-body">
                                 <h6 class="card-title">{{ movie }}</h6>
-                                <p class="card-text text-muted">{{ movie.genre.name }} {{ movie.avg_point }}</p>
+                                <p class="card-text text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
                                 <p class="card-text">How many user gave point: {{ movie.counts }}</p>
                                 <p class="card-text">{{ movie.publish_date }}</p>
                             </div>

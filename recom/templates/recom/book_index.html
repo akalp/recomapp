@@ -13,7 +13,7 @@
                             <img src="{{ book.photo.url }}" class="card-img-top">
                             <div class="card-body">
                                 <h6 class="card-title">{{ book }}</h6>
-                                <p class="text-muted">{{ book.genre.name }} {{ book.avg_point }}</p>
+                                <p class="text-muted">{{ book.genre.name }} {{ book.avg_point|default:0 }}</p>
                                 <p class="card-text">{{ book.publish_date }}</p>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                             <img src="{{ book.photo.url }}" class="card-img-top">
                             <div class="card-body">
                                 <h6 class="card-title">{{ book }}</h6>
-                                <p class="card-text text-muted">{{ book.genre.name }} {{ book.avg_point }}</p>
+                                <p class="card-text text-muted">{{ book.genre.name }} {{ book.avg_point|default:0 }}</p>
                                 <p class="card-text">How many user gave point: {{ book.counts }}</p>
                                 <p class="card-text">{{ book.publish_date }}</p>
                             </div>

@@ -24,7 +24,8 @@ class IndexView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
-        data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+        data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
 
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
@@ -132,7 +133,8 @@ class MusicIndex(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
-        data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+        data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
@@ -213,7 +215,8 @@ class BookIndex(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
-        data["bests"] = self.model.objects.all().annotate(avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+        data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
