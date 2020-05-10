@@ -1,25 +1,18 @@
 {% extends 'base.html' %} {% load extras %}
 {% block title %}RecoMapp{% endblock %}
 {% block content %}
-    
-    
-     <div class="card">
+
+
+    <div class="card">
         <div class="card-header">
             <h4>Best 10 Pieces</h4>
         </div>
         <div class="card-body">
             <div class="row row-cols-5">
                 {% for piece in bests %}
-                    <a href="{% get_url pk=piece.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ piece.photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ piece }}</h6>
-                                <p class="text-muted">{% get_genre pk=piece.pk %} {{ piece.avg_point|default:0 }}</p>
-                                <p class="card-text">{{ piece.publish_date }}</p>
-                            </div>
-                        </div>
-                    </a>
+                    {% get_url pk=piece.pk as url %}
+                    {% get_genre pk=piece.pk as genre %}
+                    {% include 'recom/partial/piece_card.html' with piece=piece url=url genre=genre %}
                 {% endfor %}
             </div>
         </div>
@@ -32,39 +25,13 @@
         <div class="card-body">
             <div class="row row-cols-5">
                 {% for piece in trends %}
-                    <a href="{% get_url pk=piece.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ piece.photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ piece }}</h6>
-                                <p class="card-text text-muted">{% get_genre pk=piece.pk %} {{ piece.avg_point|default:0 }}</p>
-                                <p class="card-text">How many user gave point: {{ piece.counts }}</p>
-                                <p class="card-text">{{ piece.publish_date }}</p>
-                            </div>
-                        </div>
-                    </a>
+                    {% get_url pk=piece.pk as url %}
+                    {% get_genre pk=piece.pk as genre %}
+                    {% include 'recom/partial/piece_card.html' with piece=piece url=url genre=genre trend=True %}
                 {% endfor %}
             </div>
         </div>
     </div>
 
-    <div class="card my-3">
-        <div class="card-header">
-            <h4>Active Users</h4>
-        </div>
-        <div class="card-body">
-            <div class="row row-cols-5">
-                {% for user in active_users %}
-                    <a href="{% url 'recom:user_detail' pk=user.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ user.profile_photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ user.username }}</h6>
-                            </div>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    {% include 'recom/partial/active_user_main_card.html' with active_users=active_users %}
 {% endblock %}

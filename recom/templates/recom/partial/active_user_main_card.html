@@ -1,0 +1,12 @@
+<div class="card my-3">
+    <div class="card-header">
+        <h4>Active Users</h4>
+    </div>
+    <div class="card-body">
+        <div class="row row-cols-5">
+            {% for user in active_users %}
+                {% include 'recom/partial/user_card.html' with user=user %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

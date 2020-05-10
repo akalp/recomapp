@@ -1,0 +1,13 @@
+<a href="{{ url }}">
+    <div class="card mb-2 mx-2">
+        <img src="{{ piece.photo.url }}" class="card-img-top">
+        <div class="card-body">
+            <h6 class="card-title">{{ piece }}</h6>
+            <p class="card-text text-muted">{{ genre }} {{ piece.avg_point|default:0 }}</p>
+            {% if trend %}
+                <p class="card-text">How many user gave point: {{ piece.counts }}</p>
+            {% endif %}
+            <p class="card-text">{{ piece.publish_date }}</p>
+        </div>
+    </div>
+</a>

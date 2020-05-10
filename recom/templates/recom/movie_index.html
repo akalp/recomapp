@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static extras %}
 {% block title %}Movies | RecoMapp{% endblock %}
 {% block content %}
     <div class="card">
@@ -8,16 +8,8 @@
         <div class="card-body">
             <div class="row row-cols-5">
                 {% for movie in bests %}
-                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ movie.photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ movie }}</h6>
-                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
-                                <p class="card-text">{{ movie.publish_date }}</p>
-                            </div>
-                        </div>
-                    </a>
+                    {% url 'recom:movie_detail' pk=movie.pk as url %}
+                    {% include 'recom/partial/piece_card.html' with piece=movie url=url genre=movie.genre.name %}
                 {% endfor %}
             </div>
         </div>
@@ -33,17 +25,8 @@
         <div class="card-body">
             <div class="row row-cols-5">
                 {% for movie in trends %}
-                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ movie.photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ movie }}</h6>
-                                <p class="card-text text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
-                                <p class="card-text">How many user gave point: {{ movie.counts }}</p>
-                                <p class="card-text">{{ movie.publish_date }}</p>
-                            </div>
-                        </div>
-                    </a>
+                    {% url 'recom:movie_detail' pk=movie.pk as url %}
+                    {% include 'recom/partial/piece_card.html' with piece=movie url=url genre=movie.genre.name trend=True %}
                 {% endfor %}
             </div>
         </div>
@@ -59,16 +42,8 @@
         <div class="card-body">
             <div class="row row-cols-5">
                 {% for movie in movies %}
-                    <a href="{% url 'recom:movie_detail' pk=movie.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ movie.photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ movie }}</h6>
-                                <p class="text-muted">{{ movie.genre.name }} {{ movie.avg_point|default:0 }}</p>
-                                <p class="card-text">{{ movie.publish_date }}</p>
-                            </div>
-                        </div>
-                    </a>
+                    {% url 'recom:movie_detail' pk=movie.pk as url %}
+                    {% include 'recom/partial/piece_card.html' with piece=movie url=url genre=movie.genre.name %}
                 {% endfor %}
             </div>
         </div>
@@ -77,24 +52,7 @@
         </div>
     </div>
 
-    <div class="card my-3">
-        <div class="card-header">
-            <h4>Active Users</h4>
-        </div>
-        <div class="card-body">
-            <div class="row row-cols-5">
-                {% for user in active_users %}
-                    <a href="{% url 'recom:user_detail' pk=user.pk %}">
-                        <div class="card mb-2 mx-2">
-                            <img src="{{ user.profile_photo.url }}" class="card-img-top">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ user.username }}</h6>
-                            </div>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+
+    {% include 'recom/partial/active_user_main_card.html' with active_users=active_users %}
 
 {% endblock %}
