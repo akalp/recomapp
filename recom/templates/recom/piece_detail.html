@@ -1,54 +1,69 @@
 {% extends 'base.html' %}
-{% load static extras %}
+{% load static extras crispy_forms_filters%}
 {% block title %}{{ object.name }} | RecoMapp{% endblock %}
 {% block content %}
 
     <div class="row h-100">
         <div class="col-5">
-            <div id="piece-info" class="card">
-                <div class="card-body">
-                    {% if object.photo %}
-                        <img src="{{ object.photo.url }}" class="card-image-top" height="200px" width="200px">
-                    {% endif %}
+            <div id="left-container" class="col-12 w-100">
+                <div class="col-12">
+                    <div id="piece-info" class="card">
+                        <div class="card-body">
+                            {% if object.photo %}
+                                <img src="{{ object.photo.url }}" class="card-image-top" height="200px" width="200px">
+                            {% endif %}
 
-                    <h4 class="card-title">{{ object.name }}</h4>
-                    <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
+                            <h4 class="card-title">{{ object.name }}</h4>
+                            <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
 
-                    {% block info1 %}{% endblock %}
+                            {% block info1 %}{% endblock %}
 
-                    {% if user.is_authenticated %}
-                        {% if object.pk|is_wished:user %}
-                            <a class="btn btn-sm btn-danger" type="button"
-                               href="{% url 'recom:del_wish' pk=object.pk %}"><i class="fas fa-minus"></i>
-                                Unwish: {{ object.wished_by.all.count }}</a>
-                        {% else %}
-                            <a class="btn btn-sm btn-success" type="button"
-                               href="{% url 'recom:wish' pk=object.pk %}"><i class="fas fa-plus"></i>
-                                Wish: {{ object.wished_by.all.count }}</a>
-                        {% endif %}
-                    {% endif %}
+                            {% if user.is_authenticated %}
+                                {% if object.pk|is_wished:user %}
+                                    <a class="btn btn-sm btn-danger" type="button"
+                                       href="{% url 'recom:del_wish' pk=object.pk %}"><i class="fas fa-minus"></i>
+                                        Unwish: {{ object.wished_by.all.count }}</a>
+                                {% else %}
+                                    <a class="btn btn-sm btn-success" type="button"
+                                       href="{% url 'recom:wish' pk=object.pk %}"><i class="fas fa-plus"></i>
+                                        Wish: {{ object.wished_by.all.count }}</a>
+                                {% endif %}
+                            {% endif %}
 
-                    <p class="card-text">{{ object.text }}</p>
+                            <p class="card-text">{{ object.text }}</p>
 
-                    {% block info2 %}{% endblock %}
+                            {% block info2 %}{% endblock %}
 
 
-                    <h6>Full Support</h6>
-                    <ul>
-                        {% for user in full_pointers %}
-                            <li>{{ user.get_full_name }}</li>
-                        {% endfor %}
-                    </ul>
+                            <h6>Full Support</h6>
+                            <ul>
+                                {% for user in full_pointers %}
+                                    <li>{{ user.get_full_name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+            {% if user.is_authenticated %}
+                <div class="col-12 mt-3">
+                    <div id="comment-card" class="card">
+                        <div class="card-body">
+                            {{ form|crispy }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
             </div>
-
         </div>
         <div class="col-7">
-            {% for i in ''|center:10 %}
+            {% for comment in object.comments.all %}
                 <div class="card mb-3">
-                    <div class="card-header">Kullanıcın Adı</div>
-                    <div class="card-body">Yorumun ilk 50 kelimesi</div>
-                    <div class="card-footer"><a href="">Yorumun tamamını okuması için link</a></div>
+                    <div class="card-header">{{ comment.user.get_full_name }} - {% get_point object=object user=comment.user %}</div>
+                    <div class="card-body">{{ comment.text }}</div>
+                    <div class="card-footer">
+                        {# FIXME like ve unline için filter tag yaz ve kullanıcın yetkili olduğunu kontrol et #}
+                        <a class="btn btn-sm btn-success" href="" type="button"><i class="fas fa-heart"></i> Like: {{ comment.liked.all.count }}</a>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -58,7 +73,7 @@
 {% block javascript %}
     <script>
         $(window).scroll(function () {
-            $("#piece-info").css({
+            $("#left-container").css({
                 "top": ($(window).scrollTop()) + "px",
                 "left": ($(window).scrollLeft()) + "px"
             });

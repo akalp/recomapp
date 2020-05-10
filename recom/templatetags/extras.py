@@ -20,6 +20,11 @@ def get_genre(pk):
             return piece.first().genre.name
 
 
+@register.simple_tag
+def get_point(object, user):
+    return object.points.filter(user=user).first().point
+
+
 @register.filter
 def is_wished(pk, user):
     return user.wishes.filter(pk=pk).exists()
