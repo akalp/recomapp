@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% load static crispy_forms_filters %}
+{% block title %}Update User | RecoMapp{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {% if user.is_authenticated %}
+                <form action="{% url 'recom:user_edit' pk=user.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-success float-right" type="submit" value="Update">
+                </form>
+            {% else %}
+                <h1>Please, log in!</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('#div_id_birthday').find('div').addClass("d-flex flex-row")
+        });
+    </script>
+{% endblock %}

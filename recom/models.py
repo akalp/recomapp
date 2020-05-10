@@ -3,10 +3,16 @@ from django.db import models
 import datetime
 
 # Create your models here.
+from django.urls import reverse
+
+
 class User(AbstractUser):
     birthday = models.DateField(null=True, verbose_name="Birthday")
     profile_photo = models.ImageField(upload_to="profile_photos", default="profile_photos/default_profile.png", verbose_name="Profile Photo")
     follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False, blank=True)
+
+    def get_absolute_url(self):
+        return reverse('recom:user_detail', kwargs={"pk":self.pk})
 
 
 class PieceBaseModel(models.Model):

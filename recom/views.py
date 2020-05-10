@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.views import generic
 
 from recom.models import PieceBaseModel, Movie, Book, Music
-from recom.forms import UserForm
+from recom.forms import UserForm, UserEditForm
 from recom.templatetags.extras import get_url
 
 
@@ -290,6 +290,12 @@ class UserDetailView(generic.DetailView):
     model = get_user_model()
     context_object_name = 'user_profile'
     template_name = 'recom/profile.html'
+
+
+class UserEditView(generic.UpdateView):
+    model = get_user_model()
+    template_name = 'recom/user_edit.html'
+    form_class = UserEditForm
 
 
 def login_register(request):
