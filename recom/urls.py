@@ -20,7 +20,7 @@ from recom import views
 from recom.views import IndexView, MovieIndex, MovieDetailView, MovieBestListView, MovieTrendListView, BookIndex, \
     BookBestListView, BookTrendListView, BookDetailView, MusicIndex, MusicBestListView, MusicTrendListView, \
     MusicDetailView, UserDetailView, follow_user, unfollow_user, wish, del_wish, MovieListView, BookListView, \
-    MusicListView, UserEditView
+    MusicListView, UserEditView, give_point
 
 app_name = 'recom'
 
@@ -48,5 +48,7 @@ urlpatterns = [
     path('wish/<pk>', wish, name="wish"),
     path('unwish/<pk>', del_wish, name="del_wish"),
     path('follow/<pk>', follow_user, name="follow"),
-    path('unfollow/<pk>', unfollow_user, name="unfollow")
+    path('unfollow/<pk>', unfollow_user, name="unfollow"),
+
+    path('give_point/', give_point, name="give_point")
 ]

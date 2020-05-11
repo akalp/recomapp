@@ -2,17 +2,16 @@ import datetime
 
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.db.models import Avg, Count, When, Case, IntegerField, Q
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
 from django.views import generic
 
-from recom.models import PieceBaseModel, Movie, Book, Music
+from recom.models import PieceBaseModel, Movie, Book, Music, Point
 from recom.forms import UserForm, UserEditForm
 from recom.templatetags.extras import get_url
 
@@ -378,3 +377,32 @@ def unfollow_user(request, pk):
     user.followed_by.remove(request.user)
     user.save()
     return redirect('recom:user_detail', pk=user.pk)
+
+
+def give_point(request):
+    if request.is_ajax():
+        if request.method == "POST":
+            user = get_user_model().objects.get(pk=request.POST.get('user'))
+            piece = PieceBaseModel.objects.get(pk=request.POST.get('piece'))
+            point = request.POST.get('point')
+            print(point)
+
+            query = Point.objects.filter(user=user, piece=piece)
+            if query.exists():
+                obj = query.first()
+                obj.point = point
+                obj.save()
+            else:
+                obj = Point()
+                obj.user = user
+                obj.point = point
+                obj.piece = piece
+                obj.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'msg': 'GET method is not allowed!'})
+    else:
+        return HttpResponse("This process is not valid.")
+
+
+    return HttpResponse("yey")

@@ -1,6 +1,32 @@
 {% extends 'base.html' %}
-{% load static extras crispy_forms_filters%}
+{% load static extras crispy_forms_filters %}
 {% block title %}{{ object.name }} | RecoMapp{% endblock %}
+{% block style %}
+    <style>
+        .rating {
+            float: left;
+        }
+
+        .rating span {
+            float: right;
+            position: relative;
+        }
+
+        .rating span input {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            opacity: 0;
+        }
+
+        .rating span:hover ~ span label,
+        .rating span:hover label,
+        .rating span.checked label,
+        .rating span.checked ~ span label {
+            color: #F90;
+        }
+    </style>
+{% endblock %}
 {% block content %}
 
     <div class="row h-100">
@@ -44,25 +70,41 @@
                         </div>
                     </div>
                 </div>
-            {% if user.is_authenticated %}
-                <div class="col-12 mt-3">
-                    <div id="comment-card" class="card">
-                        <div class="card-body">
-                            {{ form|crispy }}
+                {% if user.is_authenticated %}
+                    <div class="col-12 mt-3">
+                        <div id="comment-card" class="card">
+                            <div class="card-body">
+                                {% csrf_token %}
+                                <div class="rating">
+                                    <span><input type="radio" name="rating" id="str5" value="5"><label
+                                            for="str5"><i class="far fa-star"></i></label></span>
+                                    <span><input type="radio" name="rating" id="str4" value="4"><label
+                                            for="str4"><i class="far fa-star"></i></label></span>
+                                    <span><input type="radio" name="rating" id="str3" value="3"><label
+                                            for="str3"><i class="far fa-star"></i></label></span>
+                                    <span><input type="radio" name="rating" id="str2" value="2"><label
+                                            for="str2"><i class="far fa-star"></i></label></span>
+                                    <span><input type="radio" name="rating" id="str1" value="1"><label
+                                            for="str1"><i class="far fa-star"></i></label></span>
+
+                                    <span class="mr-3">Points:</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
         <div class="col-7">
             {% for comment in object.comments.all %}
                 <div class="card mb-3">
-                    <div class="card-header">{{ comment.user.get_full_name }} - {% get_point object=object user=comment.user %}</div>
+                    <div class="card-header">{{ comment.user.get_full_name }}
+                        - {% get_point object=object user=comment.user %}</div>
                     <div class="card-body">{{ comment.text }}</div>
                     <div class="card-footer">
                         {# FIXME like ve unline için filter tag yaz ve kullanıcın yetkili olduğunu kontrol et #}
-                        <a class="btn btn-sm btn-success" href="" type="button"><i class="fas fa-heart"></i> Like: {{ comment.liked.all.count }}</a>
+                        <a class="btn btn-sm btn-success" href="" type="button"><i class="fas fa-heart"></i>
+                            Like: {{ comment.liked.all.count }}</a>
                     </div>
                 </div>
             {% endfor %}
@@ -72,11 +114,48 @@
 
 {% block javascript %}
     <script>
+        const user = {{ user.pk }};
+        const piece = {{ object.pk }};
+        const point = {% get_point object=object user=user %};
+        let check = false;
+
         $(window).scroll(function () {
             $("#left-container").css({
                 "top": ($(window).scrollTop()) + "px",
                 "left": ($(window).scrollLeft()) + "px"
             });
+        });
+
+        $(document).ready(function () {
+            $('.rating input').click(function () {
+                $(".rating span").removeClass('checked');
+                $(this).parent().addClass('checked');
+
+                const checked_stars_query = $(".rating span.checked ~ span label, .rating span.checked label")
+                checked_stars_query.find('svg').attr('data-prefix', 'fas')
+                $('label svg').not(checked_stars_query.find('svg')).attr('data-prefix', 'far')
+            });
+
+            $('input:radio').change(
+                function () {
+                    let userRating = this.value;
+                    if (check) {
+                        $.post({% url 'recom:give_point' %},{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "point": userRating}, function (data, status) {
+                            if (data.success){
+                                console.log("yey")
+                            }else{
+                                console.error(status, data.msg)
+                            }
+                        });
+                    }
+                    check = true;
+                });
+
+            if (point > 0) {
+                $('.rating span:nth-child(' + (6 - point) + ') input').click();
+            }else{
+                check = true
+            }
         });
     </script>
 {% endblock %}
