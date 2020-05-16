@@ -39,7 +39,7 @@
                                 <img src="{{ object.photo.url }}" class="card-image-top" height="200px" width="200px">
                             {% endif %}
 
-                            <h4 class="card-title">{{ object.name }}</h4>
+                            <h4 class="card-title">{{ object.name }}<br> <span id="avg_point">{{ object.avg_point|default:0 }}</span></h4>
                             <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
 
                             {% block info1 %}{% endblock %}
@@ -90,13 +90,18 @@
                                     <span class="mr-3">Points:</span>
                                 </div>
                             </div>
+                            <div id="comment-form-container" class="card-body">
+                                <label for="comment-text">Comment:</label>
+                                <textarea class="w-100 form-control" id="comment-text" maxlength="500"></textarea>
+                                <button id="send-comment-btn" class="btn btn-success float-right mt-1" type="button">Send</button>
+                            </div>
                         </div>
                     </div>
                 {% endif %}
             </div>
         </div>
         <div class="col-7">
-            {% for comment in object.comments.all %}
+            {% for comment in object.get_ordered_comments %}
                 <div class="card mb-3">
                     <div class="card-header">{{ comment.user.get_full_name }}
                         - {% get_point object=object user=comment.user %}</div>
@@ -127,6 +132,9 @@
         });
 
         $(document).ready(function () {
+
+            $('#send-comment-btn').attr('disabled', true);
+
             $('.rating input').click(function () {
                 $(".rating span").removeClass('checked');
                 $(this).parent().addClass('checked');
@@ -140,9 +148,16 @@
                 function () {
                     let userRating = this.value;
                     if (check) {
-                        $.post({% url 'recom:give_point' %},{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "point": userRating}, function (data, status) {
+                        $.post('{% url 'recom:give_point' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "point": userRating}, function (data, status) {
                             if (data.success){
-                                console.log("yey")
+                                $.get('{% url 'recom:get_avg' pk=object.pk %}', function (avg_data, avg_status) {
+                                    if(avg_data.success){
+                                        $('#avg_point').text(avg_data.avg_point.toFixed(1));
+                                        $('#comment-form-container').show();
+                                    }else{
+                                        console.error(avg_status)
+                                    }
+                                });
                             }else{
                                 console.error(status, data.msg)
                             }
@@ -151,10 +166,31 @@
                     check = true;
                 });
 
+            $('#send-comment-btn').click(function () {
+                let comment = $('#comment-text').val();
+                    $.post('{% url 'recom:make_comment' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "comment": comment}, function (data, status) {
+                            if (data.success){
+                                location.reload()
+                            }else{
+                                console.error(status, data.msg)
+                            }
+                        });
+            });
+
+            $('#comment-text').keyup(function () {
+                if($(this).val().length > 0){
+                    $('#send-comment-btn').attr('disabled', false);
+                }else{
+                    $('#send-comment-btn').attr('disabled', true);
+                }
+            })
+
             if (point > 0) {
                 $('.rating span:nth-child(' + (6 - point) + ') input').click();
+                $('#comment-form-container').show();
             }else{
                 check = true
+                $('#comment-form-container').hide();
             }
         });
     </script>

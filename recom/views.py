@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import generic
 
-from recom.models import PieceBaseModel, Movie, Book, Music, Point
+from recom.models import PieceBaseModel, Movie, Book, Music, Point, Comment
 from recom.forms import UserForm, UserEditForm
 from recom.templatetags.extras import get_url
 
@@ -114,6 +114,10 @@ class MovieDetailView(generic.DetailView):
     model = Movie
     template_name = 'recom/movie_detail.html'
 
+    def get_queryset(self):
+        return self.model.objects.annotate(
+            avg_point=(Avg('points__point')))
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["full_pointers"] = get_user_model().objects.filter(
@@ -196,6 +200,10 @@ class MusicDetailView(generic.DetailView):
     model = Music
     template_name = 'recom/music_detail.html'
 
+    def get_queryset(self):
+        return self.model.objects.annotate(
+            avg_point=(Avg('points__point')))
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["full_pointers"] = get_user_model().objects.filter(
@@ -276,6 +284,10 @@ class BookTrendListView(generic.ListView):
 class BookDetailView(generic.DetailView):
     model = Book
     template_name = 'recom/book_detail.html'
+
+    def get_queryset(self):
+        return self.model.objects.annotate(
+            avg_point=(Avg('points__point')))
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -379,13 +391,32 @@ def unfollow_user(request, pk):
     return redirect('recom:user_detail', pk=user.pk)
 
 
+def make_comment(request):
+    if request.is_ajax():
+        if request.method == "POST":
+            user = get_user_model().objects.get(pk=request.POST.get('user'))
+            piece = PieceBaseModel.objects.get(pk=request.POST.get('piece'))
+            comment = request.POST.get('comment')
+
+            obj = Comment()
+            obj.user = user
+            obj.piece = piece
+            obj.text = comment
+            obj.save()
+
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'msg': 'GET method is not allowed!'})
+
+    return HttpResponse("This process is not valid.")
+
+
 def give_point(request):
     if request.is_ajax():
         if request.method == "POST":
             user = get_user_model().objects.get(pk=request.POST.get('user'))
             piece = PieceBaseModel.objects.get(pk=request.POST.get('piece'))
             point = request.POST.get('point')
-            print(point)
 
             query = Point.objects.filter(user=user, piece=piece)
             if query.exists():
@@ -405,4 +436,12 @@ def give_point(request):
         return HttpResponse("This process is not valid.")
 
 
-    return HttpResponse("yey")
+def get_avg_point(request, pk):
+    if request.is_ajax():
+        if request.method == "GET":
+            piece = PieceBaseModel.objects.filter(pk=pk).annotate(avg_point=(Avg('points__point'))).first()
+            return JsonResponse({"success": True, "avg_point": piece.avg_point})
+        else:
+            return JsonResponse({"success": False})
+    else:
+        return HttpResponse("This process is not valid.")

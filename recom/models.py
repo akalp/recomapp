@@ -26,6 +26,9 @@ class PieceBaseModel(models.Model):
     def __str__(self):
         return self.name
 
+    def get_ordered_comments(self):
+        return self.comments.order_by('-date')
+
 
 class Point(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="points", verbose_name="User")
@@ -46,9 +49,6 @@ class Comment(models.Model):
     text = models.TextField(null=False, max_length=500, verbose_name="Comment")
     liked = models.ManyToManyField(to=User, related_name="liked_comments", verbose_name="Liked by", blank=True)
     date = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = ("user", "piece",)
 
 
 class Author(models.Model):
