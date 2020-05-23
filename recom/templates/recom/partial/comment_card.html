@@ -1,0 +1,13 @@
+{% load extras %}
+<div class="card mb-3">
+    <div class="card-header">{{ comment.user.get_full_name }}
+        - {% get_point object=comment.piece user=comment.user %}
+        {% if comment.user.pk == user.pk %}
+            <span class="float-right">
+                <a href="{% url 'recom:del_comment' pk=comment.pk %}?from={{ from }}" title="Delete"
+                   class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>
+            </span>
+        {% endif %}
+    </div>
+    {% include 'recom/partial/comment_card_body.html' %}
+</div>

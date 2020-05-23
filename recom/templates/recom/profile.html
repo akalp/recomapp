@@ -41,17 +41,7 @@
                         {% endif %}
                     </span>
                     </div>
-                    <div class="card-body">{{ comment.text }}</div>
-                    <div class="card-footer">
-                        Like: {{ comment.liked.all.count }}
-                        <span class="float-right">
-                        {% if comment.pk|is_liked_comment:user %}
-                            <a class="btn btn-sm btn-danger" href="{% url 'recom:unlike_comment' pk=comment.pk %}?from=profile" type="button"><i class="fas fa-heart-broken"></i></a>
-                        {% else %}
-                            <a class="btn btn-sm btn-success" href="{% url 'recom:like_comment' pk=comment.pk %}?from=profile" type="button"><i class="fas fa-heart"></i></a>
-                        {% endif %}
-                        </span>
-                    </div>
+                    {% include 'recom/partial/comment_card_body.html' with comment=comment from="profile" %}
                 </div>
             {% endfor %}
         </div>
