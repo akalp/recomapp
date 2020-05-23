@@ -30,7 +30,7 @@
 {% block content %}
 
     <div class="row h-100">
-        <div class="col-5">
+        <div class="col-4">
             <div id="left-container" class="col-12 w-100">
                 <div class="col-12">
                     <div id="piece-info" class="card">
@@ -39,12 +39,10 @@
                                 <img src="{{ object.photo.url }}" class="card-image-top img-fluid">
                             {% endif %}
 
-                            <h4 class="card-title">{{ object.name }}<br> <span id="avg_point">{{ object.avg_point|default:0 }}</span></h4>
-                            <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
-
-                            {% block info1 %}{% endblock %}
-
-                            {% if user.is_authenticated %}
+                            <h4 class="card-title">{{ object.name }} /
+                                <span id="avg_point">{{ object.avg_point|default:0 }}</span><br>
+                                <span>
+                                    {% if user.is_authenticated %}
                                 {% if object.pk|is_wished:user %}
                                     <a class="btn btn-sm btn-danger" type="button"
                                        href="{% url 'recom:del_wish' pk=object.pk %}"><i class="fas fa-minus"></i>
@@ -55,6 +53,14 @@
                                         Wish: {{ object.wished_by.all.count }}</a>
                                 {% endif %}
                             {% endif %}
+                                </span>
+                            </h4>
+                            <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
+
+                            {% block info1 %}{% endblock %}
+
+
+                            <a href="{% url 'recom:wished_by' piece_pk=object.pk %}">Wished By</a>
 
                             <p class="card-text">{{ object.text }}</p>
 
@@ -100,7 +106,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-7">
+        <div class="col-8">
             {% for comment in object.get_ordered_comments %}
                 <div class="card mb-3">
                     <div class="card-header">{{ comment.user.get_full_name }}

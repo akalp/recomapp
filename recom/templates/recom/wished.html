@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% load static extras %}
+{% block title %} {{ title }} | RecoMapp {% endblock %}
+{% block content %}
+    {% include 'recom/partial/active_user_main_card.html' with active_users=objects title=title %}
+{% endblock %}

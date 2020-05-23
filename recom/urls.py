@@ -21,7 +21,7 @@ from recom.views import IndexView, MovieIndex, MovieDetailView, MovieBestListVie
     BookBestListView, BookTrendListView, BookDetailView, MusicIndex, MusicBestListView, MusicTrendListView, \
     MusicDetailView, UserDetailView, follow_user, unfollow_user, wish, del_wish, MovieListView, BookListView, \
     MusicListView, UserEditView, give_point, get_avg_point, make_comment, del_comment, like_comment, unlike_comment, \
-    Dashboard, WishesListView
+    Dashboard, WishesListView, WishedByListView
 
 app_name = 'recom'
 
@@ -61,5 +61,6 @@ urlpatterns = [
 
     path('dashboard/', Dashboard.as_view(), name="dashboard"),
 
-    path('wishes/<user_pk>', WishesListView.as_view(), name="wishes")
+    path('wishes/<user_pk>', WishesListView.as_view(), name="wishes"),
+    path('wished/<piece_pk>', WishedByListView.as_view(), name="wished_by")
 ]

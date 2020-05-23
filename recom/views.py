@@ -499,5 +499,16 @@ class WishesListView(generic.ListView):
         return data
 
 
+class WishedByListView(generic.ListView):
+    model = get_user_model()
+    context_object_name = "objects"
+    template_name = "recom/wished.html"
 
+    def get_queryset(self):
+        return self.model.objects.filter(wishes=self.kwargs.get('piece_pk'))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["title"] = "{} Wished By".format(PieceBaseModel.objects.get(pk=self.kwargs.get('piece_pk')).name)
+        return data
 
