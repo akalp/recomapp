@@ -1,5 +1,5 @@
 {% load extras %}
-<div class="card mb-3">
+<div class="card mt-3">
     <div class="card-header">{{ comment.user.get_full_name }}
         - {% get_point object=comment.piece user=comment.user %}
         {% if comment.user.pk == user.pk %}

@@ -6,7 +6,7 @@
         <div class="col-5">
             <div id="left-container" class="col-12 w-100">
                 <div class="col-12">
-                    <div id="user-info" class="card">
+                    <div id="user-info" class="card mt-3">
                         <div class="card-body">
                             <img src="{{ user_profile.profile_photo.url }}" alt="" class="card-img" style="width: 70%; height: auto">
                             <h4 class="card-title">{{ user_profile.get_full_name }}</h4>
@@ -32,7 +32,7 @@
         </div>
         <div class="col-7">
             {% for comment in user_profile.get_ordered_comments %}
-                <div class="card mb-3">
+                <div class="card mt-3">
                     <div class="card-header"><a href="{% get_url pk=comment.piece.pk %}">{{ comment.piece.name }}</a>
                         - {% get_point object=comment.piece user=comment.user %}
                     <span class="float-right">
