@@ -1,27 +1,57 @@
 {% extends 'base.html' %}
-{% load static extras%}
+{% load static extras %}
 {% block title %}{{ user_profile.get_full_name }} | RecoMapp{% endblock %}
 {% block content %}
-    <img src="{{ user_profile.profile_photo.url }}" alt="" height="200px" width="200px">
-    <h1>Name: {{ user_profile.get_full_name }}</h1>
-    {% if user.is_authenticated %}
-        {% if user_profile != user %}
-            {% if user_profile.pk|is_followed:user %}
-                <a type="button" href="{% url 'recom:unfollow' pk=user_profile.pk %}">Unfollow</a>
-                {% else %}
-                <a type="button" href="{% url 'recom:follow' pk=user_profile.pk %}">Follow</a>
-                {% endif %}
-            {% endif %}
-    {% endif %}
-    <h2>Birthday: {{ user_profile.birthday }}</h2>
+    <div class="row h-100">
+        <div class="col-5">
+            <div id="left-container" class="col-12 w-100">
+                <div class="col-12">
+                    <div id="user-info" class="card">
+                        <div class="card-body">
+                            <img src="{{ user_profile.profile_photo.url }}" alt="" class="card-img" style="width: 70%; height: auto">
+                            <h4 class="card-title">{{ user_profile.get_full_name }}</h4>
+                            {% if user.is_authenticated %}
+                                {% if user_profile != user %}
+                                    {% if user_profile.pk|is_followed:user %}
+                                        <a type="button"
+                                           href="{% url 'recom:unfollow' pk=user_profile.pk %}">Unfollow</a>
+                                    {% else %}
+                                        <a type="button" href="{% url 'recom:follow' pk=user_profile.pk %}">Follow</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
 
+                            <p class="card-text">{{ user_profile.info }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-7">
+            {% for comment in user_profile.get_ordered_comments %}
+                <div class="card mb-3">
+                    <div class="card-header">{{ comment.user.get_full_name }}
+                        - {% get_point object=object user=comment.user %}
+                    <span class="float-right">
+                        {% if comment.user.pk == user.pk %}
+                            <a href="{% url 'recom:del_comment' pk=comment.pk %}" title="Delete" class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>
+                        {% endif %}
+                    </span>
+                    </div>
+                    <div class="card-body">{{ comment.text }}</div>
+                    <div class="card-footer">
+                        Like: {{ comment.liked.all.count }}
+                        <span class="float-right">
+                        {% if comment.pk|is_liked_comment:user %}
+                            <a class="btn btn-sm btn-danger" href="{% url 'recom:unlike_comment' pk=comment.pk %}" type="button"><i class="fas fa-heart-broken"></i></a>
+                        {% else %}
+                            <a class="btn btn-sm btn-success" href="{% url 'recom:like_comment' pk=comment.pk %}" type="button"><i class="fas fa-heart"></i></a>
+                        {% endif %}
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
-    <h1>Wishes</h1>
-    <ul>
-    {% for p in user_profile.wishes.all %}
-        <li>{{ p }}</li>
-    {% empty %}
-        <li>There is no wished piece.</li>
-    {% endfor %}
-    </ul>
 {% endblock %}

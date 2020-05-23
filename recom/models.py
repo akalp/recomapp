@@ -15,6 +15,9 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse('recom:user_detail', kwargs={"pk":self.pk})
 
+    def get_ordered_comments(self):
+        return self.comments.order_by('-date')
+
 
 class PieceBaseModel(models.Model):
     name = models.CharField(null=False, max_length=100, verbose_name="Piece Name")
