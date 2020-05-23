@@ -36,7 +36,7 @@
                     <div id="piece-info" class="card">
                         <div class="card-body">
                             {% if object.photo %}
-                                <img src="{{ object.photo.url }}" class="card-image-top" height="200px" width="200px">
+                                <img src="{{ object.photo.url }}" class="card-image-top img-fluid">
                             {% endif %}
 
                             <h4 class="card-title">{{ object.name }}<br> <span id="avg_point">{{ object.avg_point|default:0 }}</span></h4>
