@@ -10,6 +10,7 @@ class User(AbstractUser):
     birthday = models.DateField(null=True, verbose_name="Birthday")
     profile_photo = models.ImageField(upload_to="profile_photos", default="profile_photos/default_profile.png", verbose_name="Profile Photo")
     follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False, blank=True)
+    info = models.TextField(blank=True, max_length=250)
 
     def get_absolute_url(self):
         return reverse('recom:user_detail', kwargs={"pk":self.pk})

@@ -20,11 +20,15 @@ class UserEditForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(), required=False)
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'birthday', 'profile_photo')
+        fields = ('first_name', 'last_name', 'birthday', 'info', 'profile_photo')
 
 
         widgets = {
             'birthday': forms.SelectDateWidget(years=range(1919, datetime.now().year + 1)),
+        }
+
+        help_texts = {
+            'info': 'Max 250 characters.'
         }
 
     def clean(self):
