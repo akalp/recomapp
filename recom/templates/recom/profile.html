@@ -22,7 +22,9 @@
                             {% endif %}
 
                             <p class="card-text">{{ user_profile.info }}</p>
-                            <a href="{% url "recom:wishes" user_pk=user_profile.pk %}">Wishes</a>
+                            <a href="{% url "recom:wishes" user_pk=user_profile.pk %}">Wishes: {{ user_profile.wishes.all.count }}</a>
+                            <a href="{% url "recom:follows" user_pk=user_profile.pk %}">Follows: {{ user_profile.follows.all.count }}</a>
+                            <a href="{% url "recom:followers" user_pk=user_profile.pk %}">Followers: {{ user_profile.followed_by.all.count }}</a>
                         </div>
                     </div>
                 </div>

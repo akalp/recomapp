@@ -512,3 +512,30 @@ class WishedByListView(generic.ListView):
         data["title"] = "{} Wished By".format(PieceBaseModel.objects.get(pk=self.kwargs.get('piece_pk')).name)
         return data
 
+
+class FollowsListView(generic.ListView):
+    model = get_user_model()
+    context_object_name = "objects"
+    template_name = "recom/wished.html"
+
+    def get_queryset(self):
+        return self.model.objects.filter(followed_by=self.kwargs.get('user_pk'))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["title"] = "{} Follows".format(get_user_model().objects.get(pk=self.kwargs.get('user_pk')).username)
+        return data
+
+
+class FollowerListView(generic.ListView):
+    model = get_user_model()
+    context_object_name = "objects"
+    template_name = "recom/wished.html"
+
+    def get_queryset(self):
+        return self.model.objects.filter(follows=self.kwargs.get('user_pk'))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["title"] = "{}'s Followers".format(get_user_model().objects.get(pk=self.kwargs.get('user_pk')).username)
+        return data
