@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static extras %}
+{% block title %} Dashboard | RecoMapp{% endblock %}
+{% block content %}
+    <div class="container">
+    <h1 class="my-3">Dashboard</h1>
+    {% for comment in comments %}
+        <div class="card mb-3">
+            <div class="card-header">{{ comment.user.get_full_name }}
+                - {% get_point object=comment.piece user=comment.user %}
+                <span class="float-right">
+                        {% if comment.user.pk == user.pk %}
+                            <a href="{% url 'recom:del_comment' pk=comment.pk %}" title="Delete"
+                               class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>
+                        {% endif %}
+                    </span>
+            </div>
+            <div class="card-body">{{ comment.text }}</div>
+            <div class="card-footer">
+                Like: {{ comment.liked.all.count }}
+                <span class="float-right">
+                        {% if comment.pk|is_liked_comment:user %}
+                            <a class="btn btn-sm btn-danger" href="{% url 'recom:unlike_comment' pk=comment.pk %}"
+                               type="button"><i class="fas fa-heart-broken"></i></a>
+                        {% else %}
+                            <a class="btn btn-sm btn-success" href="{% url 'recom:like_comment' pk=comment.pk %}"
+                               type="button"><i class="fas fa-heart"></i></a>
+                        {% endif %}
+                        </span>
+            </div>
+        </div>
+        </div>
+    {% endfor %}
+{% endblock %}

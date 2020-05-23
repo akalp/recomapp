@@ -51,6 +51,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'recom:user_detail' pk=user.pk %}"><i
                                 class="fas fa-user fa-sm"></i> Profile</a>
+                        <a class="dropdown-item" href="{% url 'recom:dashboard' %}"><i class="fas fa-paper-plane"></i> Dashboard</a>
                         <a class="dropdown-item" href="{% url 'recom:user_edit' pk=user.pk %}"><i
                                 class="fas fa-user-cog fa-sm"></i>Settings</a>
                         <a class="dropdown-item" href="{% url 'recom:logout' %}"><i

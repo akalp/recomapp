@@ -474,3 +474,12 @@ def get_avg_point(request, pk):
             return JsonResponse({"success": False})
     else:
         return HttpResponse("This process is not valid.")
+
+
+class Dashboard(generic.ListView):
+    model = Comment
+    context_object_name = "comments"
+    template_name = 'recom/dashboard.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(user__followed_by=self.request.user.pk).order_by('-date')
