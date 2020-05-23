@@ -110,6 +110,9 @@
                         {# FIXME like ve unline için filter tag yaz ve kullanıcın yetkili olduğunu kontrol et #}
                         <a class="btn btn-sm btn-success" href="" type="button"><i class="fas fa-heart"></i>
                             Like: {{ comment.liked.all.count }}</a>
+                        {% if comment.user.pk == user.pk %}
+                        <a href="{% url 'recom:del_comment' pk=comment.pk %}" class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Delete</a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

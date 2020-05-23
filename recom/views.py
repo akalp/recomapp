@@ -391,6 +391,7 @@ def unfollow_user(request, pk):
     return redirect('recom:user_detail', pk=user.pk)
 
 
+## COMMENT
 def make_comment(request):
     if request.is_ajax():
         if request.method == "POST":
@@ -411,6 +412,14 @@ def make_comment(request):
     return HttpResponse("This process is not valid.")
 
 
+def del_comment(request, pk):
+    obj = Comment.objects.get(pk=pk)
+    piece_pk = obj.piece.pk
+    obj.delete()
+    return HttpResponseRedirect(get_url(piece_pk))
+
+
+## POINT
 def give_point(request):
     if request.is_ajax():
         if request.method == "POST":

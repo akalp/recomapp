@@ -20,7 +20,7 @@ from recom import views
 from recom.views import IndexView, MovieIndex, MovieDetailView, MovieBestListView, MovieTrendListView, BookIndex, \
     BookBestListView, BookTrendListView, BookDetailView, MusicIndex, MusicBestListView, MusicTrendListView, \
     MusicDetailView, UserDetailView, follow_user, unfollow_user, wish, del_wish, MovieListView, BookListView, \
-    MusicListView, UserEditView, give_point, get_avg_point, make_comment
+    MusicListView, UserEditView, give_point, get_avg_point, make_comment, del_comment
 
 app_name = 'recom'
 
@@ -53,5 +53,6 @@ urlpatterns = [
     path('give_point/', give_point, name="give_point"),
     path('get_avg_point/<pk>', get_avg_point, name="get_avg"),
 
-    path('make_comment', make_comment, name="make_comment")
+    path('make_comment/', make_comment, name="make_comment"),
+    path('del_comment/<pk>', del_comment, name="del_comment")
 ]
