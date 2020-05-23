@@ -483,3 +483,21 @@ class Dashboard(generic.ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(user__followed_by=self.request.user.pk).order_by('-date')
+
+
+class WishesListView(generic.ListView):
+    model = PieceBaseModel
+    context_object_name = "objects"
+    template_name = "recom/wishes.html"
+
+    def get_queryset(self):
+        return self.model.objects.filter(wished_by=self.kwargs.get('user_pk'))
+
+    def get_context_data(self, *args, **kwargs):
+        data = super().get_context_data(*args, **kwargs)
+        data["title"] = "{} Wishes".format(get_user_model().objects.get(pk=self.kwargs.get('user_pk')).username)
+        return data
+
+
+
+
