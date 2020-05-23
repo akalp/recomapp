@@ -37,3 +37,8 @@ def is_wished(pk, user):
 @register.filter
 def is_followed(pk, user):
     return user.follows.filter(pk=pk).exists()
+
+
+@register.filter
+def is_liked_comment(pk, user):
+    return user.liked_comments.filter(pk=pk).exists()

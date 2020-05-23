@@ -412,6 +412,26 @@ def make_comment(request):
     return HttpResponse("This process is not valid.")
 
 
+## Operations
+@login_required
+def like_comment(request, pk):
+    obj = Comment.objects.get(pk=pk)
+    piece_pk = obj.piece.pk
+    request.user.liked_comments.add(obj)
+    request.user.save()
+    return HttpResponseRedirect(get_url(piece_pk))
+
+
+@login_required
+def unlike_comment(request, pk):
+    obj = Comment.objects.get(pk=pk)
+    piece_pk = obj.piece.pk
+    request.user.liked_comments.remove(obj)
+    request.user.save()
+    return HttpResponseRedirect(get_url(piece_pk))
+
+
+@login_required
 def del_comment(request, pk):
     obj = Comment.objects.get(pk=pk)
     piece_pk = obj.piece.pk

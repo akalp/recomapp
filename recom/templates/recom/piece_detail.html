@@ -104,15 +104,23 @@
             {% for comment in object.get_ordered_comments %}
                 <div class="card mb-3">
                     <div class="card-header">{{ comment.user.get_full_name }}
-                        - {% get_point object=object user=comment.user %}</div>
+                        - {% get_point object=object user=comment.user %}
+                    <span class="float-right">
+                        {% if comment.user.pk == user.pk %}
+                            <a href="{% url 'recom:del_comment' pk=comment.pk %}" title="Delete" class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>
+                        {% endif %}
+                    </span>
+                    </div>
                     <div class="card-body">{{ comment.text }}</div>
                     <div class="card-footer">
-                        {# FIXME like ve unline için filter tag yaz ve kullanıcın yetkili olduğunu kontrol et #}
-                        <a class="btn btn-sm btn-success" href="" type="button"><i class="fas fa-heart"></i>
-                            Like: {{ comment.liked.all.count }}</a>
-                        {% if comment.user.pk == user.pk %}
-                        <a href="{% url 'recom:del_comment' pk=comment.pk %}" class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Delete</a>
+                        Like: {{ comment.liked.all.count }}
+                        <span class="float-right">
+                        {% if comment.pk|is_liked_comment:user %}
+                            <a class="btn btn-sm btn-danger" href="{% url 'recom:unlike_comment' pk=comment.pk %}" type="button"><i class="fas fa-heart-broken"></i></a>
+                        {% else %}
+                            <a class="btn btn-sm btn-success" href="{% url 'recom:like_comment' pk=comment.pk %}" type="button"><i class="fas fa-heart"></i></a>
                         {% endif %}
+                        </span>
                     </div>
                 </div>
             {% endfor %}
