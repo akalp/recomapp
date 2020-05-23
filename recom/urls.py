@@ -29,25 +29,31 @@ urlpatterns = [
     path('login_register/', views.login_register, name='login_register'),
     path('logout/', views.user_logout, name='logout'),
     path('', IndexView.as_view(), name="index"),
+
     path('movies', MovieIndex.as_view(), name="movie_index"),
     path('movies/all', MovieListView.as_view(), name="movie_list"),
     path('movies/best', MovieBestListView.as_view(), name="movie_best"),
     path('movies/trends', MovieTrendListView.as_view(), name="movie_trend"),
     path('movies/<pk>', MovieDetailView.as_view(), name="movie_detail"),
+
     path('books/all', BookListView.as_view(), name="book_list"),
     path('books', BookIndex.as_view(), name="book_index"),
     path('books/best', BookBestListView.as_view(), name="book_best"),
     path('books/trends', BookTrendListView.as_view(), name="book_trend"),
     path('books/<pk>', BookDetailView.as_view(), name="book_detail"),
+
     path('music', MusicIndex.as_view(), name="music_index"),
     path('books/all', MusicListView.as_view(), name="music_list"),
     path('music/best', MusicBestListView.as_view(), name="music_best"),
     path('music/trends', MusicTrendListView.as_view(), name="music_trend"),
     path('music/<pk>', MusicDetailView.as_view(), name="music_detail"),
+
     path('user/<pk>', UserDetailView.as_view(), name="user_detail"),
     path('user/<pk>/edit', UserEditView.as_view(), name="user_edit"),
+
     path('wish/<pk>', wish, name="wish"),
     path('unwish/<pk>', del_wish, name="del_wish"),
+
     path('follow/<pk>', follow_user, name="follow"),
     path('unfollow/<pk>', unfollow_user, name="unfollow"),
 

@@ -419,7 +419,13 @@ def like_comment(request, pk):
     piece_pk = obj.piece.pk
     request.user.liked_comments.add(obj)
     request.user.save()
-    return HttpResponseRedirect(get_url(piece_pk))
+    where = request.GET.get('from')
+    if where == "profile":
+        return HttpResponseRedirect(reverse('recom:user_detail', kwargs={"pk": request.user.pk}))
+    elif where == "dashboard":
+        return HttpResponseRedirect(reverse('recom:dashboard'))
+    else:
+        return HttpResponseRedirect(get_url(piece_pk))
 
 
 @login_required
@@ -428,7 +434,13 @@ def unlike_comment(request, pk):
     piece_pk = obj.piece.pk
     request.user.liked_comments.remove(obj)
     request.user.save()
-    return HttpResponseRedirect(get_url(piece_pk))
+    where = request.GET.get('from')
+    if where == "profile":
+        return HttpResponseRedirect(reverse('recom:user_detail', kwargs={"pk": request.user.pk}))
+    elif where == "dashboard":
+        return HttpResponseRedirect(reverse('recom:dashboard'))
+    else:
+        return HttpResponseRedirect(get_url(piece_pk))
 
 
 @login_required
@@ -436,7 +448,11 @@ def del_comment(request, pk):
     obj = Comment.objects.get(pk=pk)
     piece_pk = obj.piece.pk
     obj.delete()
-    return HttpResponseRedirect(get_url(piece_pk))
+    where = request.GET.get('from')
+    if where == "profile":
+        return HttpResponseRedirect(reverse('recom:user_detail', kwargs={"pk": request.user.pk}))
+    else:
+        return HttpResponseRedirect(get_url(piece_pk))
 
 
 ## POINT
