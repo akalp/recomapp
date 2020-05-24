@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 
 from recom.models import PieceBaseModel, Movie, Book, Music, Point, Comment
@@ -555,3 +556,18 @@ class FollowerListView(generic.ListView):
         data = super().get_context_data(*args, **kwargs)
         data["title"] = "{}'s Followers".format(get_user_model().objects.get(pk=self.kwargs.get('user_pk')).username)
         return data
+
+
+class SearchListView(generic.ListView):
+    template_name = 'recom/wishes.html'
+    context_object_name = 'objects'
+
+    def get_queryset(self):
+        search = self.request.GET.get('search')
+        return PieceBaseModel.objects.filter(Q(publish_date__lte=timezone.now()),
+                                   Q(name__icontains=search) | Q(text__icontains=search)).order_by('-publish_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Search for "+self.request.GET.get('search')
+        return context
