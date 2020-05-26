@@ -67,7 +67,7 @@
                             {% block info2 %}{% endblock %}
 
 
-                            <h6>Full Support</h6>
+                            <h6>Full Support</h6> <!-- TODO profil fotoğraflarını yanyana göster, 3 sıra 5 sütun-->
                             <ul>
                                 {% for user in full_pointers %}
                                     <li>{{ user.get_full_name }}</li>
@@ -99,6 +99,7 @@
                             <div id="comment-form-container" class="card-body" style="padding-top: 0.25rem">
                                 <label for="comment-text">Comment:</label>
                                 <textarea class="w-100 form-control" id="comment-text" maxlength="500"></textarea>
+                                <small class="text-muted    ">Max 500 characters.</small>
                                 <button id="send-comment-btn" class="btn btn-success float-right mt-1" type="button">Send</button>
                             </div>
                         </div>
@@ -118,7 +119,7 @@
     <script>
         const user = {{ user.pk }};
         const piece = {{ object.pk }};
-        const point = {% get_point object=object user=user %};
+        let point = {% get_point object=object user=user %};
         let check = false;
 
         $(document).ready(function () {
@@ -136,9 +137,9 @@
 
             $('input:radio').change(
                 function () {
-                    let userRating = this.value;
+                    point = this.value;
                     if (check) {
-                        $.post('{% url 'recom:give_point' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "point": userRating}, function (data, status) {
+                        $.post('{% url 'recom:give_point' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "point": point}, function (data, status) {
                             if (data.success){
                                 $.get('{% url 'recom:get_avg' pk=object.pk %}', function (avg_data, avg_status) {
                                     if(avg_data.success){
@@ -158,7 +159,7 @@
 
             $('#send-comment-btn').click(function () {
                 let comment = $('#comment-text').val();
-                    $.post('{% url 'recom:make_comment' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "comment": comment}, function (data, status) {
+                    $.post('{% url 'recom:make_comment' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "comment": comment, "point": point}, function (data, status) {
                             if (data.success){
                                 location.reload()
                             }else{

@@ -1,7 +1,7 @@
 {% load extras %}
 <div class="card mt-3">
     <div class="card-header">{{ comment.user.get_full_name }}
-        - {% get_point object=comment.piece user=comment.user %}
+        - {{ comment.point }}
         {% if comment.user.pk == user.pk %}
             <span class="float-right">
                 <a href="{% url 'recom:del_comment' pk=comment.pk %}?from={{ from }}" title="Delete"

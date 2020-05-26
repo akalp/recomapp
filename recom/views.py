@@ -399,11 +399,13 @@ def make_comment(request):
             user = get_user_model().objects.get(pk=request.POST.get('user'))
             piece = PieceBaseModel.objects.get(pk=request.POST.get('piece'))
             comment = request.POST.get('comment')
+            point = request.POST.get('point')
 
             obj = Comment()
             obj.user = user
             obj.piece = piece
             obj.text = comment
+            obj.point = point
             obj.save()
 
             return JsonResponse({'success': True})

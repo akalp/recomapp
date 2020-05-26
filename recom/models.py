@@ -52,6 +52,7 @@ class Comment(models.Model):
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="comments", verbose_name="Piece")
     text = models.TextField(null=False, max_length=500, verbose_name="Comment")
     liked = models.ManyToManyField(to=User, related_name="liked_comments", verbose_name="Liked by", blank=True)
+    point = models.IntegerField(verbose_name="Point", blank=True, null=True)
     date = models.DateTimeField(auto_now=True)
 
 
