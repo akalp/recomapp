@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Avg, Count, When, Case, IntegerField, Q
+from django.db.models import Avg, Count, When, Case, IntegerField, Q, F
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
@@ -25,13 +25,13 @@ class IndexView(generic.TemplateView):
         data = super().get_context_data(**kwargs)
 
         data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
-            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
 
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
                  output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
-            '-counts')[:11]
+            '-counts')[:10]
 
         act_user_query = "select u.*, count(p.id) as count from recom_piecebasemodel b, recom_point p, recom_user u where p.piece_id=b.id and p.user_id=u.id group by u.id order by count desc"
         data["active_users"] = get_user_model().objects.raw(act_user_query)
@@ -45,23 +45,23 @@ class MovieIndex(generic.ListView):
     context_object_name = "movies"
 
     def get_queryset(self):
-        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:11]
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:10]
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
 
         data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
-            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
 
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
                  output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
-            '-counts')[:11]
+            '-counts')[:10]
 
         act_user_query = "select u.*, count(p.id) as count from recom_{} m, recom_piecebasemodel b, recom_point p, recom_user u where m.piecebasemodel_ptr_id = b.id and p.piece_id=b.id and p.user_id=u.id group by u.id order by count desc".format(
             "movie")
-        data["active_users"] = get_user_model().objects.raw(act_user_query)[:11]
+        data["active_users"] = get_user_model().objects.raw(act_user_query)[:10]
         return data
 
 
@@ -133,17 +133,17 @@ class MusicIndex(generic.ListView):
     context_object_name = "music"
 
     def get_queryset(self):
-        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:11]
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:10]
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
         data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
-            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
 
-                 output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by('-counts')[:11]
+                 output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by('-counts')[:10]
 
         act_user_query = "select u.*, count(p.id) as count from recom_{} m, recom_piecebasemodel b, recom_point p, recom_user u where m.piecebasemodel_ptr_id = b.id and p.piece_id=b.id and p.user_id=u.id group by u.id order by count desc".format(
             "music")
@@ -219,17 +219,17 @@ class BookIndex(generic.ListView):
     context_object_name = "books"
 
     def get_queryset(self):
-        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:11]
+        return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:10]
 
     def get_context_data(self, *args, **kwargs):
         data = super().get_context_data(*args, **kwargs)
         data["bests"] = self.model.objects.filter(points__isnull=False).annotate(
-            avg_point=(Avg('points__point'))).order_by('-avg_point')[:11]
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
         data["trends"] = self.model.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
                  output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
-            '-counts')[:11]
+            '-counts')[:10]
 
         act_user_query = "select u.*, count(p.id) as count from recom_{} m, recom_piecebasemodel b, recom_point p, recom_user u where m.piecebasemodel_ptr_id = b.id and p.piece_id=b.id and p.user_id=u.id group by u.id order by count desc".format(
             "book")
@@ -577,3 +577,43 @@ class SearchListView(generic.ListView):
         context['users'] = get_user_model().objects.filter(
             Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(username__icontains=search))
         return context
+
+
+class ReportView(generic.TemplateView):
+    template_name = "recom/report.html"
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        data["encoktakipedilenler"] = get_user_model().objects.exclude(pk=1).annotate(follower_count=Count("followed_by")).order_by(
+            "-follower_count")[:10]
+
+        data["encokbegenilenyorumlar"] = Comment.objects.annotate(like_count=Count("liked")).order_by("-like_count")[
+                                         :10]
+
+        data["encoketkilesimalanparcalar"] = PieceBaseModel.objects.annotate(wish_count=Count("wished_by"),
+                                                                             comment_count=Count("comments"),
+                                                                             point_count=Count("points")).annotate(
+            total=F("wish_count") + F("comment_count") + F("point_count")).order_by("-total")
+
+        data["encoketkilesimverenkullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(
+            comment_like_count=Count("liked_comments"), follow_count=Count("follows"), wish_count=Count("wishes"),
+            comment_count=Count("comments"),
+            point_count=Count("points")).annotate(
+            total=F("liked_comments") + F("follows") + F("wish_count") + F("comment_count") + F(
+                "point_count")).order_by("-total")
+
+        data["encoketkilesimalankullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(follower_count=Count("followed_by"),
+                                                                                   comment_like_count=Count(
+                                                                                       "comments__liked")).annotate(
+            total=F("follower_count") + F("comment_like_count")).order_by("-total")[:10]
+        
+        data["bestpieces"] = PieceBaseModel.objects.filter(points__isnull=False).annotate(
+            avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
+
+        trending_time = datetime.date.today() - datetime.timedelta(days=7)
+        data["trendpieces"] = PieceBaseModel.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
+            Case(When(points__date__gte=trending_time, then=1),
+                 output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
+            '-counts')[:10]
+        return data

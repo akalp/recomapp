@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load static extras %}
+{% block title %}
+    Report
+{% endblock %}
+
+{% block style %}
+    <style>
+        @media print {
+            .no-print, .no-print * {
+                display: none !important;
+            }
+        }
+
+        [id^=report], #print {
+            background-color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container" id="print">
+        <div class="py-3" id="report1">
+            <h3>Most Followed Users</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Follower Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in encoktakipedilenler %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ test.username }}</td>
+                        <td>{{ test.follower_count }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report2">
+            <h3>En çok etkileşim alan kullanıcılar</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Follower Count</th>
+                    <th scope="col">Total Comment Likes</th>
+                    <th scope="col">Total Interactions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in encoketkilesimalankullanicilar %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ test.username }}</td>
+                        <td>{{ test.follower_count }}</td>
+                        <td>{{ test.comment_like_count }}</td>
+                        <td>{{ test.total }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report3">
+            <h3>En çok etkileşim veren kullanıcılar</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Follow Count</th>
+                    <th scope="col">Comment Likes Count</th>
+                    <th scope="col">Wish Count</th>
+                    <th scope="col">Comment Count</th>
+                    <th scope="col">Point Count</th>
+                    <th scope="col">Total Interactions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in encoketkilesimverenkullanicilar %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ test.username }}</td>
+                        <td>{{ test.follow_count }}</td>
+                        <td>{{ test.comment_like_count }}</td>
+                        <td>{{ test.wish_count }}</td>
+                        <td>{{ test.comment_count }}</td>
+                        <td>{{ test.point_count }}</td>
+                        <td>{{ test.total }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report4">
+            <h3>En çok etkileşim alan parçalar</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Piece Name</th>
+                    <th scope="col">Piece Type</th>
+                    <th scope="col">Wish Count</th>
+                    <th scope="col">Comment Count</th>
+                    <th scope="col">Point Count</th>
+                    <th scope="col">Total Interactions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in encoketkilesimalanparcalar %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ test.name }}</td>
+                        <td>{% get_type pk=test.pk %}</td>
+                        <td>{{ test.wish_count }}</td>
+                        <td>{{ test.comment_count }}</td>
+                        <td>{{ test.point_count }}</td>
+                        <td>{{ test.total }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report5">
+
+            <h3>Best Pieces by Average Point</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Piece Name</th>
+                    <th scope="col">Piece Type</th>
+                    <th scope="col">Avg. Point</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in bestpieces %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ test.name }}</td>
+                        <td>{% get_type pk=test.pk %}</td>
+                        <td>{{ test.avg_point }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report6">
+            <h3>Trend Pieces by Point Count</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Piece Name</th>
+                    <th scope="col">Piece Type</th>
+                    <th scope="col">Avg. Point</th>
+                    <th scope="col">Point Count in Last Week</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in trendpieces %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ test.name }}</td>
+                        <td>{% get_type pk=test.pk %}</td>
+                        <td>{{ test.avg_point }}</td>
+                        <td>{{ test.counts }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="btn-group float-right no-print" role="group">
+        <button id="jsPDFdbtn" class="btn btn-warning">Export as PDF</button>
+        <button class="btn btn-info" onclick="print();">Print</button>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"
+            integrity="sha256-c3RzsUWg+y2XljunEQS0LqWdQ04X1D3j22fd/8JCAKw=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"
+            integrity="sha256-gJWdmuCRBovJMD9D/TVdo4TIK8u5Sti11764sZT1DhI=" crossorigin="anonymous"></script>
+    <script>
+        $('#jsPDFdbtn').click(function () {
+            var doc = new jsPDF("p", "pt", "a4");
+            doc.addHTML($("#print"), function () {
+                doc.save("report.pdf");
+            });
+        });
+    </script>
+{% endblock %}
