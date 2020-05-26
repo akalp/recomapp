@@ -13,6 +13,13 @@ def get_url(pk):
 
 
 @register.simple_tag
+def get_type(pk):
+    for model in [Movie, Book, Music]:
+        if model.objects.filter(pk=pk).exists():
+            return model.__name__
+
+
+@register.simple_tag
 def get_genre(pk):
     for model in [Movie, Book, Music]:
         piece = model.objects.filter(pk=pk)
