@@ -561,15 +561,19 @@ class FollowerListView(generic.ListView):
 
 
 class SearchListView(generic.ListView):
-    template_name = 'recom/wishes.html'
+    template_name = 'recom/search.html'
     context_object_name = 'objects'
 
     def get_queryset(self):
         search = self.request.GET.get('search')
         return PieceBaseModel.objects.filter(Q(publish_date__lte=timezone.now()),
-                                   Q(name__icontains=search) | Q(text__icontains=search)).order_by('-publish_date')
+                                             Q(name__icontains=search) | Q(text__icontains=search)).order_by(
+            '-publish_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = "Search for "+self.request.GET.get('search')
+        search = self.request.GET.get('search')
+        context['title'] = "Search: " + search
+        context['users'] = get_user_model().objects.filter(
+            Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(username__icontains=search))
         return context

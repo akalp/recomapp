@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static extras %}
+{% block title %} {{ title }} | RecoMapp {% endblock %}
+{% block content %}
+    <h1 class="my-3">{{ title }}</h1>
+    {% if objects %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4>Pieces</h4>
+            </div>
+            <div class="card-body">
+                <div class="row row-cols-5">
+                    {% for obj in objects %}
+                        <a href="{% get_url pk=obj.pk %}">
+                            <div class="card mb-2 mx-2">
+                                <img src="{{ obj.photo.url }}" class="card-img-top">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ obj }}</h6>
+                                    <p class="text-muted">{{ obj.genre.name }} {{ obj.avg_point|default:0 }}</p>
+                                    <p class="card-text">{{ obj.publish_date }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if users %}
+        {% include 'recom/partial/active_user_main_card.html' with active_users=users title="Users" %}
+    {% endif %}
+{% endblock %}
