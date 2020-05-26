@@ -1,7 +1,14 @@
 {% load extras %}
 <div class="card mt-3">
-    <div class="card-header">{{ comment.user.get_full_name }}
-        - {{ comment.point }}
+    <div class="card-header">
+        <a href="{% url 'recom:user_detail' pk=comment.user.pk %}">
+        <img class="rounded mr-1"
+             style="max-width: 1.5em; height: 1.5rem"
+             src="{{ comment.user.profile_photo.url }}"/>
+
+            {{ comment.user.get_full_name }}
+        </a>
+        - {% render_stars n=comment.point %}
         {% if comment.user.pk == user.pk %}
             <span class="float-right">
                 <a href="{% url 'recom:del_comment' pk=comment.pk %}?from={{ from }}" title="Delete"

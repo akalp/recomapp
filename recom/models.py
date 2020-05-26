@@ -104,6 +104,12 @@ class Performer(models.Model):
     photo = models.ImageField(upload_to="performer_photos", default="performer_photos/default_performer.jpg",
                               verbose_name="Photo")
 
+    def get_full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+    def __str__(self):
+        return self.get_full_name()
+
 
 class Movie(PieceBaseModel):
     director = models.ForeignKey(to=Director, on_delete=models.CASCADE, related_name="movie")

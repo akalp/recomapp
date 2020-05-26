@@ -1,5 +1,6 @@
 from django import template
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from recom.models import Movie, Book, Music, PieceBaseModel
 
@@ -49,3 +50,15 @@ def is_followed(pk, user):
 @register.filter
 def is_liked_comment(pk, user):
     return user.liked_comments.filter(pk=pk).exists()
+
+
+@register.simple_tag
+def render_stars(n):
+    full_star = "<i class='fas fa-star' style='color: #F90;'></i>"
+    empty_star = "<i class='far fa-star'></i>"
+    res = ""
+    for _ in range(n):
+        res += full_star
+    for _ in range(5-n):
+        res += empty_star
+    return mark_safe(res)

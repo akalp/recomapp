@@ -34,7 +34,7 @@
             {% for comment in user_profile.get_ordered_comments %}
                 <div class="card mt-3">
                     <div class="card-header"><a href="{% get_url pk=comment.piece.pk %}">{{ comment.piece.name }}</a>
-                        - {% get_point object=comment.piece user=comment.user %}
+                        - {% render_stars n=comment.point %}
                     <span class="float-right">
                         {% if comment.user.pk == user.pk %}
                             <a href="{% url 'recom:del_comment' pk=comment.pk %}?from=profile" title="Delete" class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>

@@ -122,7 +122,7 @@ class MovieDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["full_pointers"] = get_user_model().objects.filter(
-            Q(points__point=5) & Q(points__piece_id=kwargs['object']))
+            Q(points__point=5) & Q(points__piece_id=kwargs['object']))[:5]
         return data
 
 

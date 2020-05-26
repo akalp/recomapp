@@ -4,5 +4,17 @@
     <p class="card-text text-muted">by {{ object.director }}</p>
 {% endblock %}
 {% block info2 %}
-{#TODO    performer ekle #}
+    {% if object.acted_by.exists %}
+        <h6>Performers</h6>
+        <ul style="list-style-type:none; padding-left: 0">
+            {% for act in object.acted_by.all %}
+                <li class="pt-1">
+                    <img class="rounded mr-1"
+                         style="max-width: 3em; height: 3rem"
+                         src="{{ act.photo.url }}"/>
+                    {{ act.get_full_name }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

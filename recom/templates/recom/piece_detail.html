@@ -30,11 +30,11 @@
 {% block content %}
 
     <div class="row h-100">
-        <div class="col-4">
-            <div id="left-container" class="col-12 w-100">
+        <div class="col-4 d-flex justify-content-center">
+            <div class="row">
                 <div class="col-12">
                     <div id="piece-info" class="card mt-3">
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             {% if object.photo %}
                                 <img src="{{ object.photo.url }}" class="card-image-top img-fluid">
                             {% endif %}
@@ -43,16 +43,17 @@
                                 <span id="avg_point">{{ object.avg_point|default:0 }}</span><br>
                                 <span>
                                     {% if user.is_authenticated %}
-                                {% if object.pk|is_wished:user %}
-                                    <a class="btn btn-sm btn-danger" type="button"
-                                       href="{% url 'recom:del_wish' pk=object.pk %}"><i class="fas fa-minus"></i>
+                                        {% if object.pk|is_wished:user %}
+                                            <a class="btn btn-sm btn-danger" type="button"
+                                               href="{% url 'recom:del_wish' pk=object.pk %}"><i
+                                                    class="fas fa-minus"></i>
                                         Unwish: {{ object.wished_by.all.count }}</a>
-                                {% else %}
-                                    <a class="btn btn-sm btn-success" type="button"
-                                       href="{% url 'recom:wish' pk=object.pk %}"><i class="fas fa-plus"></i>
+                                        {% else %}
+                                            <a class="btn btn-sm btn-success" type="button"
+                                               href="{% url 'recom:wish' pk=object.pk %}"><i class="fas fa-plus"></i>
                                         Wish: {{ object.wished_by.all.count }}</a>
-                                {% endif %}
-                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
                                 </span>
                             </h4>
                             <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
@@ -67,12 +68,16 @@
                             {% block info2 %}{% endblock %}
 
 
-                            <h6>Full Support</h6> <!-- TODO profil fotoğraflarını yanyana göster, 3 sıra 5 sütun-->
-                            <ul>
-                                {% for user in full_pointers %}
-                                    <li>{{ user.get_full_name }}</li>
-                                {% endfor %}
-                            </ul>
+                            <h6>Full Support</h6>
+                            {% for user in full_pointers %}
+                                <a href="{% url 'recom:user_detail' pk=user.pk %}">
+                                    <img class="rounded mr-1"
+                                         style="max-width: 3em; height: 3rem"
+                                         src="{{ user.profile_photo.url }}"/>
+
+                                    {{ comment.user.get_full_name }}
+                                </a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -100,7 +105,9 @@
                                 <label for="comment-text">Comment:</label>
                                 <textarea class="w-100 form-control" id="comment-text" maxlength="500"></textarea>
                                 <small class="text-muted    ">Max 500 characters.</small>
-                                <button id="send-comment-btn" class="btn btn-success float-right mt-1" type="button">Send</button>
+                                <button id="send-comment-btn" class="btn btn-success float-right mt-1" type="button">
+                                    Send
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -139,17 +146,22 @@
                 function () {
                     point = this.value;
                     if (check) {
-                        $.post('{% url 'recom:give_point' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "point": point}, function (data, status) {
-                            if (data.success){
+                        $.post('{% url 'recom:give_point' %}', {
+                            "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val(),
+                            "user": user,
+                            "piece": piece,
+                            "point": point
+                        }, function (data, status) {
+                            if (data.success) {
                                 $.get('{% url 'recom:get_avg' pk=object.pk %}', function (avg_data, avg_status) {
-                                    if(avg_data.success){
+                                    if (avg_data.success) {
                                         $('#avg_point').text(avg_data.avg_point.toFixed(1));
                                         $('#comment-form-container').show();
-                                    }else{
+                                    } else {
                                         console.error(avg_status)
                                     }
                                 });
-                            }else{
+                            } else {
                                 console.error(status, data.msg)
                             }
                         });
@@ -159,19 +171,25 @@
 
             $('#send-comment-btn').click(function () {
                 let comment = $('#comment-text').val();
-                    $.post('{% url 'recom:make_comment' %}',{"csrfmiddlewaretoken":$('input[name=csrfmiddlewaretoken]').val(),"user": user, "piece":piece, "comment": comment, "point": point}, function (data, status) {
-                            if (data.success){
-                                location.reload()
-                            }else{
-                                console.error(status, data.msg)
-                            }
-                        });
+                $.post('{% url 'recom:make_comment' %}', {
+                    "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val(),
+                    "user": user,
+                    "piece": piece,
+                    "comment": comment,
+                    "point": point
+                }, function (data, status) {
+                    if (data.success) {
+                        location.reload()
+                    } else {
+                        console.error(status, data.msg)
+                    }
+                });
             });
 
             $('#comment-text').keyup(function () {
-                if($(this).val().length > 0){
+                if ($(this).val().length > 0) {
                     $('#send-comment-btn').attr('disabled', false);
-                }else{
+                } else {
                     $('#send-comment-btn').attr('disabled', true);
                 }
             })
@@ -179,7 +197,7 @@
             if (point > 0) {
                 $('.rating span:nth-child(' + (6 - point) + ') input').click();
                 $('#comment-form-container').show();
-            }else{
+            } else {
                 check = true
                 $('#comment-form-container').hide();
             }
