@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from .models import User
+from .models import User, Movie, Book, Music, MusicGenre, MovieGenre, BookGenre, \
+    Album, Author, Director, Performer, Singer
 
 from datetime import datetime
 
@@ -49,3 +50,84 @@ class UserEditForm(forms.ModelForm):
             user.save()
 
         return user
+
+
+class MovieForm(forms.ModelForm):
+    class Meta:
+        model = Movie
+        fields = '__all__'
+        exclude = ('wished_by',)
+
+        widgets = {
+            'publish_date': forms.SelectDateWidget(years=range(1919, datetime.now().year + 1)),
+        }
+
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = '__all__'
+        exclude = ('wished_by',)
+
+        widgets = {
+            'publish_date': forms.SelectDateWidget(years=range(1919, datetime.now().year + 1)),
+        }
+
+
+class MusicForm(forms.ModelForm):
+    class Meta:
+        model = Music
+        fields = '__all__'
+        exclude = ('wished_by',)
+
+        widgets = {
+            'publish_date': forms.SelectDateWidget(years=range(1919, datetime.now().year + 1)),
+        }
+
+
+class MovieGenreForm(forms.ModelForm):
+    class Meta:
+        model = MovieGenre
+        fields = '__all__'
+
+
+class BookGenreForm(forms.ModelForm):
+    class Meta:
+        model = BookGenre
+        fields = '__all__'
+
+
+class MusicGenreForm(forms.ModelForm):
+    class Meta:
+        model = MusicGenre
+        fields = '__all__'
+
+
+class AlbumForm(forms.ModelForm):
+    class Meta:
+        model = Album
+        fields = '__all__'
+
+
+class DirectorForm(forms.ModelForm):
+    class Meta:
+        model = Director
+        fields = '__all__'
+
+
+class PerformerForm(forms.ModelForm):
+    class Meta:
+        model = Performer
+        fields = '__all__'
+
+
+class AuthorForm(forms.ModelForm):
+    class Meta:
+        model = Author
+        fields = '__all__'
+
+
+class SingerForm(forms.ModelForm):
+    class Meta:
+        model = Singer
+        fields = '__all__'

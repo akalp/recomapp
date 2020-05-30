@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from django.db.models import Avg, Count, When, Case, IntegerField, Q, F
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -12,8 +13,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from recom.models import PieceBaseModel, Movie, Book, Music, Point, Comment
-from recom.forms import UserForm, UserEditForm
+from recom.models import PieceBaseModel, Movie, Book, Music, Point, Comment, BookGenre, MusicGenre, MovieGenre, Album, \
+    Author, Performer, Singer, Director
+from recom.forms import UserForm, UserEditForm, BookForm, MovieForm, MusicForm, BookGenreForm, MovieGenreForm, \
+    MusicGenreForm, AlbumForm, SingerForm, AuthorForm, PerformerForm, DirectorForm
 from recom.templatetags.extras import get_url
 
 
@@ -585,7 +588,8 @@ class ReportView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
-        data["encoktakipedilenler"] = get_user_model().objects.exclude(pk=1).annotate(follower_count=Count("followed_by")).order_by(
+        data["encoktakipedilenler"] = get_user_model().objects.exclude(pk=1).annotate(
+            follower_count=Count("followed_by")).order_by(
             "-follower_count")[:10]
 
         data["encokbegenilenyorumlar"] = Comment.objects.annotate(like_count=Count("liked")).order_by("-like_count")[
@@ -603,11 +607,12 @@ class ReportView(generic.TemplateView):
             total=F("liked_comments") + F("follows") + F("wish_count") + F("comment_count") + F(
                 "point_count")).order_by("-total")
 
-        data["encoketkilesimalankullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(follower_count=Count("followed_by"),
-                                                                                   comment_like_count=Count(
-                                                                                       "comments__liked")).annotate(
+        data["encoketkilesimalankullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(
+            follower_count=Count("followed_by"),
+            comment_like_count=Count(
+                "comments__liked")).annotate(
             total=F("follower_count") + F("comment_like_count")).order_by("-total")[:10]
-        
+
         data["bestpieces"] = PieceBaseModel.objects.filter(points__isnull=False).annotate(
             avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
 
@@ -616,4 +621,400 @@ class ReportView(generic.TemplateView):
             Case(When(points__date__gte=trending_time, then=1),
                  output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
             '-counts')[:10]
+        return data
+
+
+class StaffView(generic.TemplateView, PermissionRequiredMixin):
+    template_name = "recom/staff.html"
+    permission_required = 'is_staff'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["movies"] = Movie.objects.all()
+        data["books"] = Book.objects.all()
+        data["musics"] = Music.objects.all()
+
+        data["movie_genres"] = MovieGenre.objects.all()
+        data["book_genres"] = BookGenre.objects.all()
+        data["music_genres"] = MusicGenre.objects.all()
+
+        data["albums"] = Album.objects.all()
+        data["singers"] = Singer.objects.all()
+        data["authors"] = Author.objects.all()
+        data["directors"] = Director.objects.all()
+        data["performers"] = Performer.objects.all()
+        return data
+
+
+class MovieDeleteView(generic.DeleteView):
+    model = Movie
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class BookDeleteView(generic.DeleteView):
+    model = Book
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class MusicDeleteView(generic.DeleteView):
+    model = Music
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class MovieGenreDeleteView(generic.DeleteView):
+    model = MovieGenre
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class BookGenreDeleteView(generic.DeleteView):
+    model = BookGenre
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class MusicGenreDeleteView(generic.DeleteView):
+    model = MusicGenre
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class AlbumDeleteView(generic.DeleteView):
+    model = Album
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class SingerDeleteView(generic.DeleteView):
+    model = Singer
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class AuthorDeleteView(generic.DeleteView):
+    model = Author
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class DirectorDeleteView(generic.DeleteView):
+    model = Director
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class PerformerDeleteView(generic.DeleteView):
+    model = Performer
+    success_url = '/staff/'
+    template_name = 'recom/delete.html'
+
+
+class BookCreateView(generic.CreateView):
+    model = Book
+    form_class = BookForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Book"
+        data["url"] = reverse('recom:create_book')
+        data["btn_text"] = "Create"
+        return data
+
+
+class MovieCreateView(generic.CreateView):
+    model = Movie
+    form_class = MovieForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Movie"
+        data["url"] = reverse('recom:create_movie')
+        data["btn_text"] = "Create"
+        return data
+
+
+class MusicCreateView(generic.CreateView):
+    model = Music
+    form_class = MusicForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Music"
+        data["url"] = reverse('recom:create_music')
+        data["btn_text"] = "Create"
+        return data
+
+
+class BookGenreCreateView(generic.CreateView):
+    model = BookGenre
+    form_class = BookGenreForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Book Genre"
+        data["url"] = reverse('recom:create_book_genre')
+        data["btn_text"] = "Create"
+        return data
+
+
+class MovieGenreCreateView(generic.CreateView):
+    model = MovieGenre
+    form_class = MovieGenreForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Movie Genre"
+        data["url"] = reverse('recom:create_movie_genre')
+        data["btn_text"] = "Create"
+        return data
+
+
+class MusicGenreCreateView(generic.CreateView):
+    model = MusicGenre
+    form_class = MusicGenreForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Music Genre"
+        data["url"] = reverse('recom:create_music_genre')
+        data["btn_text"] = "Create"
+        return data
+
+
+class AlbumCreateView(generic.CreateView):
+    model = Album
+    form_class = AlbumForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Album"
+        data["url"] = reverse('recom:create_album')
+        data["btn_text"] = "Create"
+        return data
+
+
+class AuthorCreateView(generic.CreateView):
+    model = Author
+    form_class = AuthorForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Author"
+        data["url"] = reverse('recom:create_author')
+        data["btn_text"] = "Create"
+        return data
+
+
+class PerformerCreateView(generic.CreateView):
+    model = Performer
+    form_class = PerformerForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Performer"
+        data["url"] = reverse('recom:create_performer')
+        data["btn_text"] = "Create"
+        return data
+
+
+class SingerCreateView(generic.CreateView):
+    model = Singer
+    form_class = SingerForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Singer"
+        data["url"] = reverse('recom:create_singer')
+        data["btn_text"] = "Create"
+        return data
+
+
+class DirectorCreateView(generic.CreateView):
+    model = Director
+    form_class = DirectorForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Create Director"
+        data["url"] = reverse('recom:create_director')
+        data["btn_text"] = "Create"
+        return data
+
+
+class BookUpdateView(generic.UpdateView):
+    model = Book
+    form_class = BookForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Book"
+        data["url"] = reverse('recom:update_book', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class MovieUpdateView(generic.UpdateView):
+    model = Movie
+    form_class = MovieForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Movie"
+        data["url"] = reverse('recom:update_movie', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class MusicUpdateView(generic.UpdateView):
+    model = Music
+    form_class = MusicForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Music"
+        data["url"] = reverse('recom:update_music', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class BookGenreUpdateView(generic.UpdateView):
+    model = BookGenre
+    form_class = BookGenreForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Book Genre"
+        data["url"] = reverse('recom:update_book_genre', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class MovieGenreUpdateView(generic.UpdateView):
+    model = MovieGenre
+    form_class = MovieGenreForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Movie Genre"
+        data["url"] = reverse('recom:update_movie_genre', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class MusicGenreUpdateView(generic.UpdateView):
+    model = MusicGenre
+    form_class = MusicGenreForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Music Genre"
+        data["url"] = reverse('recom:update_music_genre', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class AlbumUpdateView(generic.UpdateView):
+    model = Album
+    form_class = AlbumForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Album"
+        data["url"] = reverse('recom:update_album', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class AuthorUpdateView(generic.UpdateView):
+    model = Author
+    form_class = AuthorForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Author"
+        data["url"] = reverse('recom:update_author', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class PerformerUpdateView(generic.UpdateView):
+    model = Performer
+    form_class = PerformerForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Performer"
+        data["url"] = reverse('recom:update_performer', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class SingerUpdateView(generic.UpdateView):
+    model = Singer
+    form_class = SingerForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Singer"
+        data["url"] = reverse('recom:update_singer', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
+        return data
+
+
+class DirectorUpdateView(generic.UpdateView):
+    model = Director
+    form_class = DirectorForm
+    success_url = '/staff/'
+    template_name = 'recom/staff_form.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["title"] = "Update Director"
+        data["url"] = reverse('recom:update_director', kwargs={'pk': data["object"].pk})
+        data["btn_text"] = "Update"
         return data

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static extras crispy_forms_filters %}
+{% block title %}
+    {{ title }} | RecoMapp
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1 class="my-3">{{ title }}</h1>
+
+        <form action="{{ url }}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-success float-right" type="submit" value="{{ btn_text }}">
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('#div_id_publish_date').find('div').addClass("d-flex flex-row")
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+{% load static extras %}
+{% block title %}
+    Staff Page | RecoMapp
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div id="types" class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="movie-tab" data-toggle="tab" href="#movie" role="tab"
+                           aria-controls="movie" aria-selected="true">Movie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="book-tab" data-toggle="tab" href="#book" role="tab"
+                           aria-controls="book" aria-selected="false">Book</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab"
+                           aria-controls="music" aria-selected="false">Music</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="movie" role="tabpanel" aria-labelledby="movie-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for movie in movies %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. <a
+                                        href="{% url 'recom:movie_detail' pk=movie.pk %}">{{ movie }}</a>
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_movie' pk=movie.pk %}"
+                                       title="Edit {{ movie }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_movie' pk=movie.pk %}"
+                                       title="Delete {{ movie }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no movie.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_movie' %}" class="btn btn-sm btn-primary float-right">Add
+                            Movie</a>
+                    </div>
+                    <div class="tab-pane fade" id="book" role="tabpanel" aria-labelledby="book-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for book in books %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. <a
+                                        href="{% url 'recom:book_detail' pk=book.pk %}">{{ book }}</a>
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_book' pk=book.pk %}"
+                                       title="Edit {{ book }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_book' pk=book.pk %}"
+                                       title="Delete {{ book }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no book.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_book' %}" class="btn btn-sm btn-primary float-right">Add Book</a>
+                    </div>
+                    <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for music in musics %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. <a
+                                        href="{% url 'recom:music_detail' pk=music.pk %}">{{ music }}</a>
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_music' pk=music.pk %}"
+                                       title="Edit {{ music }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_music' pk=music.pk %}"
+                                       title="Delete {{ music }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no music.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_music' %}" class="btn btn-sm btn-primary float-right">Add
+                            Music</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="genres" class="card mt-3">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="movie_genre-tab" data-toggle="tab" href="#movie_genre" role="tab"
+                           aria-controls="movie_genre" aria-selected="true">Movie Genre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="book_genre-tab" data-toggle="tab" href="#book_genre" role="tab"
+                           aria-controls="book_genre" aria-selected="false">Book Genre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="music_genre-tab" data-toggle="tab" href="#music_genre" role="tab"
+                           aria-controls="music_genre" aria-selected="false">Music Genre</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="movie_genre" role="tabpanel"
+                         aria-labelledby="movie_genre-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for movie_genre in movie_genres %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ movie_genre }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_movie_genre' pk=movie_genre.pk %}"
+                                       title="Edit {{ movie_genre }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_movie_genre' pk=movie_genre.pk %}"
+                                       title="Delete {{ movie_genre }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no movie_genre.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_movie_genre' %}" class="btn btn-sm btn-primary float-right">Add
+                            Movie Genre</a>
+                    </div>
+                    <div class="tab-pane fade" id="book_genre" role="tabpanel" aria-labelledby="book_genre-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for book_genre in book_genres %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ book_genre }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_book_genre' pk=book_genre.pk %}"
+                                       title="Edit {{ book_genre }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_book_genre' pk=book_genre.pk %}"
+                                       title="Delete {{ book_genre }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no book_genre.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_book_genre' %}" class="btn btn-sm btn-primary float-right">Add
+                            Book Genre</a>
+                    </div>
+                    <div class="tab-pane fade" id="music_genre" role="tabpanel" aria-labelledby="music_genre-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for music_genre in music_genres %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ music_genre }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_music_genre' pk=music_genre.pk %}"
+                                       title="Edit {{ music_genre }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_music_genre' pk=music_genre.pk %}"
+                                       title="Delete {{ music_genre }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no music_genre.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_music_genre' %}" class="btn btn-sm btn-primary float-right">Add
+                            Music Genre</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="others" class="card mt-3">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="album-tab" data-toggle="tab" href="#album" role="tab"
+                           aria-controls="album" aria-selected="true">Album</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="singer-tab" data-toggle="tab" href="#singer" role="tab"
+                           aria-controls="singer" aria-selected="false">Singer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="author-tab" data-toggle="tab" href="#author" role="tab"
+                           aria-controls="author" aria-selected="false">Author</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="director-tab" data-toggle="tab" href="#director" role="tab"
+                           aria-controls="director" aria-selected="false">Director</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="performer-tab" data-toggle="tab" href="#performer" role="tab"
+                           aria-controls="performer" aria-selected="false">Performer</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="album" role="tabpanel" aria-labelledby="album-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for album in albums %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ album }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_album' pk=album.pk %}"
+                                       title="Edit {{ album }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_album' pk=album.pk %}"
+                                       title="Delete {{ album }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no album.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_album' %}" class="btn btn-sm btn-primary float-right">Add
+                            Album</a>
+                    </div>
+                    <div class="tab-pane fade" id="singer" role="tabpanel" aria-labelledby="singer-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for singer in singers %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ singer }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_singer' pk=singer.pk %}"
+                                       title="Edit {{ singer }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_singer' pk=singer.pk %}"
+                                       title="Delete {{ singer }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no singer.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_singer' %}" class="btn btn-sm btn-primary float-right">Add
+                            Singer</a>
+                    </div>
+                    <div class="tab-pane fade" id="author" role="tabpanel" aria-labelledby="author-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for author in authors %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ author }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_author' pk=author.pk %}"
+                                       title="Edit {{ author }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_author' pk=author.pk %}"
+                                       title="Delete {{ author }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no author.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_author' %}" class="btn btn-sm btn-primary float-right">Add
+                            Author</a>
+                    </div>
+                    <div class="tab-pane fade" id="director" role="tabpanel" aria-labelledby="director-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for director in directors %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ director }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_director' pk=director.pk %}"
+                                       title="Edit {{ director }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_director' pk=director.pk %}"
+                                       title="Delete {{ director }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no director.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_director' %}" class="btn btn-sm btn-primary float-right">Add
+                            Director</a>
+                    </div>
+                    <div class="tab-pane fade" id="performer" role="tabpanel" aria-labelledby="performer-tab">
+                        <ul style="list-style-type:none; padding-left: 0">
+                            {% for performer in performers %}
+                                <li class="mb-2">
+                                    {{ forloop.counter }}. {{ performer }}
+                                    <span class="float-right">
+                                    <a type="button" href="{% url 'recom:update_performer' pk=performer.pk %}"
+                                       title="Edit {{ performer }}" class="btn btn-sm btn-warning"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a type="button" href="{% url 'recom:delete_performer' pk=performer.pk %}"
+                                       title="Delete {{ performer }}" class="btn btn-sm btn-danger text-white"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </span>
+                                </li>
+                            {% empty %}
+                                <li>
+                                    <h5 class="card-title">There is no performer.</h5>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recom:create_performer' %}" class="btn btn-sm btn-primary float-right">Add
+                            Performer</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

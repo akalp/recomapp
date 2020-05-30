@@ -35,7 +35,8 @@
             </ul>
             <form class="form-inline mt-2 mt-md-0" action="{% url 'recom:search' %}" method="get">
                 {% csrf_token %}
-                <input id="search" class="form-control mr-sm-2" type="text" name="search" placeholder="Search Pieces" aria-label="Search">
+                <input id="search" class="form-control mr-sm-2" type="text" name="search" placeholder="Search Pieces"
+                       aria-label="Search">
             </form>
             {% if not user.is_authenticated %}
                 <a class="btn btn-outline-primary ml-1" href="{% url 'recom:login_register' %}"><i
@@ -45,16 +46,22 @@
                 <div class="dropdown">
                     <a class="btn btn-secondary btn-md dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="rounded" style="max-width: 1.5em; height: 1.5rem"
+                        <img class="rounded-circle" style="width: 1.5rem; height: 1.5rem"
                              src="{{ user.profile_photo.url }}"/> {{ user.get_full_name }}
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'recom:user_detail' pk=user.pk %}"><i
                                 class="fas fa-user fa-sm"></i> Profile</a>
-                        <a class="dropdown-item" href="{% url 'recom:dashboard' %}"><i class="fas fa-paper-plane"></i> Dashboard</a>
+                        <a class="dropdown-item" href="{% url 'recom:dashboard' %}"><i class="fas fa-paper-plane"></i>
+                            Dashboard</a>
+                        {% if user.is_superuser %}
+
+                            <a class="dropdown-item" href="{% url 'recom:staff' %}"><i
+                                    class="fab fa-superpowers"></i> Staff</a>
+                        {% endif %}
                         <a class="dropdown-item" href="{% url 'recom:user_edit' pk=user.pk %}"><i
-                                class="fas fa-user-cog fa-sm"></i>Settings</a>
+                                class="fas fa-user-cog fa-sm"></i> Settings</a>
                         <a class="dropdown-item" href="{% url 'recom:logout' %}"><i
                                 class="fas fa-sign-out-alt fa-sm"></i> Logout</a>
                     </div>

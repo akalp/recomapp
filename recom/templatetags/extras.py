@@ -6,6 +6,7 @@ from recom.models import Movie, Book, Music, PieceBaseModel
 
 register = template.Library()
 
+
 @register.simple_tag
 def get_url(pk):
     for model in [Movie, Book, Music]:
@@ -30,11 +31,11 @@ def get_genre(pk):
 
 @register.simple_tag
 def get_point(object, user):
-    query = object.points.filter(user=user)
-    if query.exists():
-        return query.first().point
-    else:
-        return 0
+    if user.pk is not None:
+        query = object.points.filter(user=user)
+        if query.exists():
+            return query.first().point
+    return 0
 
 
 @register.filter
@@ -49,7 +50,10 @@ def is_followed(pk, user):
 
 @register.filter
 def is_liked_comment(pk, user):
-    return user.liked_comments.filter(pk=pk).exists()
+    if user.pk is not None:
+        return user.liked_comments.filter(pk=pk).exists()
+    else:
+        return False
 
 
 @register.simple_tag
@@ -59,6 +63,6 @@ def render_stars(n):
     res = ""
     for _ in range(n):
         res += full_star
-    for _ in range(5-n):
+    for _ in range(5 - n):
         res += empty_star
     return mark_safe(res)

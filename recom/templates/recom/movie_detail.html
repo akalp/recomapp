@@ -8,11 +8,11 @@
         <h6>Performers</h6>
         <ul style="list-style-type:none; padding-left: 0">
             {% for act in object.acted_by.all %}
-                <li class="pt-1">
-                    <img class="rounded mr-1"
-                         style="max-width: 3em; height: 3rem"
+                <li class="pt-1" style="text-align: left">
+                    <img class="rounded-circle mr-1"
+                         style="width: 2.5rem; height: 2.5rem"
                          src="{{ act.photo.url }}"/>
-                    {{ act.get_full_name }}
+                    <small>{{ act.get_full_name }}</small>
                 </li>
             {% endfor %}
         </ul>

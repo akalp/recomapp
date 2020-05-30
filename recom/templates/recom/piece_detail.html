@@ -71,8 +71,8 @@
                             <h6>Full Support</h6>
                             {% for user in full_pointers %}
                                 <a href="{% url 'recom:user_detail' pk=user.pk %}">
-                                    <img class="rounded mr-1"
-                                         style="max-width: 3em; height: 3rem"
+                                    <img class="rounded-circle mr-1"
+                                         style="width: 3rem; height: 3rem"
                                          src="{{ user.profile_photo.url }}"/>
 
                                     {{ comment.user.get_full_name }}
@@ -123,6 +123,7 @@
 {% endblock %}
 
 {% block javascript %}
+    {% if user.is_authenticated %}
     <script>
         const user = {{ user.pk }};
         const piece = {{ object.pk }};
@@ -203,4 +204,5 @@
             }
         });
     </script>
+    {% endif %}
 {% endblock %}

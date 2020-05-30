@@ -2,8 +2,8 @@
 <div class="card mt-3">
     <div class="card-header">
         <a href="{% url 'recom:user_detail' pk=comment.user.pk %}">
-        <img class="rounded mr-1"
-             style="max-width: 1.5em; height: 1.5rem"
+        <img class="rounded-circle mr-1"
+             style="width: 1.5rem; height: 1.5rem"
              src="{{ comment.user.profile_photo.url }}"/>
 
             {{ comment.user.get_full_name }}

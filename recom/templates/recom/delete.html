@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Delete {{ object }} | RecoMapp
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="card mt-5">
+            <div class="card-header">
+                <h5>Delete {{ object }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">{% csrf_token %}
+                    <p class="card-text">Are you sure you want to delete "{{ object }}"?</p>
+                    <input class="btn btn-danger float-right" type="submit" value="Confirm">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
