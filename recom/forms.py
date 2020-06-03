@@ -39,11 +39,7 @@ class UserEditForm(forms.ModelForm):
                 cleaned[key] = value
         return cleaned
 
-
     def save(self, commit=True):
-        print(self.cleaned_data)
-        print(self.changed_data)
-
         user = super().save()
         if "password" in self.cleaned_data.keys():
             user.set_password(self.cleaned_data.get("password"))
@@ -107,6 +103,10 @@ class AlbumForm(forms.ModelForm):
     class Meta:
         model = Album
         fields = '__all__'
+
+        widgets = {
+            'publish_date': forms.SelectDateWidget(years=range(1919, datetime.now().year + 1)),
+        }
 
 
 class DirectorForm(forms.ModelForm):
