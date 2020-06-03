@@ -35,7 +35,7 @@
             </ul>
             <form class="form-inline mt-2 mt-md-0" action="{% url 'recom:search' %}" method="get">
                 {% csrf_token %}
-                <input id="search" class="form-control mr-sm-2" type="text" name="search" placeholder="Search Pieces"
+                <input id="search" class="form-control mr-sm-2" type="text" name="search" placeholder="Search"
                        aria-label="Search">
             </form>
             {% if not user.is_authenticated %}
@@ -59,6 +59,9 @@
 
                             <a class="dropdown-item" href="{% url 'recom:staff' %}"><i
                                     class="fab fa-superpowers"></i> Staff</a>
+
+                            <a href="{% url 'recom:report' %}" class="dropdown-item"><i class="fas fa-scroll"></i>
+                                Report</a>
                         {% endif %}
                         <a class="dropdown-item" href="{% url 'recom:user_edit' pk=user.pk %}"><i
                                 class="fas fa-user-cog fa-sm"></i> Settings</a>
