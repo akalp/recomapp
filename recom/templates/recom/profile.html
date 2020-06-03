@@ -39,23 +39,27 @@
                         </div>
                     </div>
                 </div>
-            {% if point %}
-                <div class="row px-4 my-3">
-                    <div class="col-12">
-                        <h4>Recommends</h4>
-                        <div class="row row-cols-5">
-                            {% for piece in point %}
-                                <div class="card pl-1">
-                                    <img src="{{ piece.photo.url }}" class="card-img-top mx-auto" alt="" style="max-height: 5vw; max-width: 5vw">
-                                    <div class="point card-body text-center">
-                                        {% render_stars_of piece=piece user=user %}
-                                    </div>
-                                </div>
-                            {% endfor %}
+                {% if point %}
+                    <div class="row px-4 my-3">
+                        <div class="col-12">
+                            <h4>Recommends</h4>
+                            <div class="row row-cols-5">
+                                {% for piece in point %}
+                                    <a href="{% get_url pk=piece.pk %}">
+                                        <div class="card h-100 pl-1">
+                                            <img src="{{ piece.photo.url }}" class="card-img-top mx-auto" alt=""
+                                                 style="max-height: 5vw; max-width: 5vw">
+                                            <div class="point card-body text-center">
+                                                {% render_stars_of piece=piece user=user %}
+                                                <div><small>{{ piece.name }}</small></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
         <div class="col-7">
