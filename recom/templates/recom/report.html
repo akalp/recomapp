@@ -44,7 +44,7 @@
         </div>
 
         <div class="py-3" id="report2">
-            <h3>En çok etkileşim alan kullanıcılar</h3>
+            <h3>Most Popular Users</h3>
             <table class="table table-sm">
                 <thead>
                 <tr>
@@ -71,7 +71,7 @@
         </div>
 
         <div class="py-3" id="report3">
-            <h3>En çok etkileşim veren kullanıcılar</h3>
+            <h3>Most Active Users</h3>
             <table class="table table-sm">
                 <thead>
                 <tr>
@@ -104,7 +104,7 @@
         </div>
 
         <div class="py-3" id="report4">
-            <h3>En çok etkileşim alan parçalar</h3>
+            <h3>Most Popular Pieces</h3>
             <table class="table table-sm">
                 <thead>
                 <tr>
@@ -183,6 +183,80 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="py-3" id="report7">
+            <h3>Recorded Piece Counts</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Piece Type</th>
+                    <th scope="col">Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for type, value in piece_counts.items %}
+                    <tr>
+                        <td>{{ type }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report7">
+            <h3>Point Counts by Types</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Piece Type</th>
+                    <th scope="col">Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for type, value in point_counts_by_type.items %}
+                    <tr>
+                        <td>{{ type }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report8">
+            <h3>Comment Counts by Types</h3>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Piece Type</th>
+                    <th scope="col">Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for type, value in comment_counts_by_type.items %}
+                    <tr>
+                        <td>{{ type }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-3" id="report9">
+            <h3>An Extra...</h3>
+            <hr/>
+            <p>{{ username_bahar }} of users have "bahar" in their usernames.</p>
+            <p>{{ user_bahar }} of users have "bahar" in their names.</p>
+            {% for type, value in type_bahar.items %}
+                <p>{{ value }} of {{ type }}s contains "bahar" in title or description.</p>
+            {% endfor %}
+            <p>{{ comment_bahar }} of comments contains "bahar".</p>
+            <p>In total {{ total_bahar }} records contains "bahar".</p>
+        </div>
+
+
     </div>
 
     <div class="btn-group float-right no-print" role="group">

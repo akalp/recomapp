@@ -325,8 +325,6 @@ def login_register(request):
         if where == "login":
             username = request.POST.get('username')
             password = request.POST.get('password')
-            print(username)
-            print(password)
 
             user = authenticate(username=username, password=password)
 
@@ -340,12 +338,10 @@ def login_register(request):
                               context={'error': True, 'user_form': user_form, 'from_log': True})
         elif where == "register":
             user_form = UserForm(data=request.POST)
-            print(request.FILES)
             if user_form.is_valid():
                 new_user = user_form.save(commit=False)
 
                 if 'profile_photo' in request.FILES:
-                    print("test")
                     new_user.profile_photo = request.FILES['profile_photo']
                 new_user.save()
                 registered = True
@@ -621,6 +617,34 @@ class ReportView(generic.TemplateView):
             Case(When(points__date__gte=trending_time, then=1),
                  output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
             '-counts')[:10]
+
+        data["piece_counts"] = {"Movie": Movie.objects.count(), "Music": Music.objects.count(), "Book": Book.objects.count()}
+        data["point_counts_by_type"] = {"Movie": Point.objects.filter(piece_id__in=Movie.objects.values("id")).count(),
+                                        "Music": Point.objects.filter(piece_id__in=Music.objects.values("id")).count(),
+                                        "Book": Point.objects.filter(piece_id__in=Book.objects.values("id")).count()}
+
+        data["comment_counts_by_type"] = {"Movie": Comment.objects.filter(piece_id__in=Movie.objects.values("id")).count(),
+                                          "Music": Comment.objects.filter(piece_id__in=Music.objects.values("id")).count(),
+                                          "Book": Comment.objects.filter(piece_id__in=Book.objects.values("id")).count()}
+
+        data["username_bahar"] = get_user_model().objects.filter(username__icontains="bahar").count()
+
+        data["user_bahar"] = get_user_model().objects.filter(Q(first_name__icontains="bahar") | Q(last_name__icontains="bahar")).count()
+        data["type_bahar"] = {"Movie": Movie.objects.filter(Q(name__icontains="bahar") | Q(text__icontains="bahar")).count(),
+                              "Music": Music.objects.filter(Q(name__icontains="bahar") | Q(text__icontains="bahar")).count(),
+                              "Book": Book.objects.filter(Q(name__icontains="bahar") | Q(text__icontains="bahar")).count(),
+                              "Album": Album.objects.filter(name__icontains="bahar").count()}
+
+        data["comment_bahar"] = Comment.objects.filter(text__icontains="bahar").count()
+
+        count = data["username_bahar"] + data["user_bahar"] + sum(list(data["type_bahar"].values()))
+        count += Performer.objects.filter(Q(first_name__icontains="bahar") | Q(last_name__icontains="bahar")).count()
+        count += Director.objects.filter(Q(first_name__icontains="bahar") | Q(last_name__icontains="bahar")).count()
+        count += Author.objects.filter(Q(first_name__icontains="bahar") | Q(last_name__icontains="bahar")).count()
+        count += Singer.objects.filter(Q(first_name__icontains="bahar") | Q(last_name__icontains="bahar")).count()
+        count += data["comment_bahar"]
+        data["total_bahar"] = count
+
         return data
 
 
