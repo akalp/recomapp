@@ -1,6 +1,6 @@
 <a href="{% url 'recom:user_detail' pk=user.pk %}">
     <div class="card mb-2 mx-2 h-100">
-        <img src="{{ user.profile_photo.url }}" class="card-img-top">
+        <img src="{{ user.profile_photo.url }}" class="card-img-top" style="height: 20vw">
         <div class="card-body">
             <h6 class="card-title">{{ user.username }}</h6>
         </div>

@@ -306,6 +306,11 @@ class UserDetailView(generic.DetailView):
     context_object_name = 'user_profile'
     template_name = 'recom/profile.html'
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["point"] = PieceBaseModel.objects.filter(points__user_id=kwargs["object"].id, points__point__gte=3).order_by('-points__point')[:10]
+        return data
+
 
 class UserEditView(generic.UpdateView):
     model = get_user_model()

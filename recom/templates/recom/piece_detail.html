@@ -55,13 +55,15 @@
                                         {% endif %}
                                     {% endif %}
                                 </span>
+                            <span>
+
+                            <a class="btn btn-sm btn-info" href="{% url 'recom:wished_by' piece_pk=object.pk %}"><i class="fas fa-external-link-alt"></i> Wished By</a>
+                            </span>
                             </h4>
                             <p class="card-text text-muted">{% get_genre pk=object.pk %}, {{ object.publish_date }}</p>
 
                             {% block info1 %}{% endblock %}
 
-
-                            <a href="{% url 'recom:wished_by' piece_pk=object.pk %}">Wished By</a>
 
                             <p class="card-text">{{ object.text }}</p>
 

@@ -1,33 +1,61 @@
 {% extends 'base.html' %}
 {% load static extras %}
 {% block title %}{{ user_profile.get_full_name }} | RecoMapp{% endblock %}
+{% block style %}
+    <style>
+        .point > svg {
+            max-width: 0.75vw;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <div class="row h-100">
         <div class="col-5">
             <div id="left-container" class="col-12 w-100">
-                <div class="col-12">
-                    <div id="user-info" class="card mt-3">
-                        <div class="card-body">
-                            <img src="{{ user_profile.profile_photo.url }}" alt="" class="card-img" style="width: 70%; height: auto">
-                            <h4 class="card-title">{{ user_profile.get_full_name }}</h4>
-                            {% if user.is_authenticated %}
-                                {% if user_profile != user %}
-                                    {% if user_profile.pk|is_followed:user %}
-                                        <a type="button"
-                                           href="{% url 'recom:unfollow' pk=user_profile.pk %}">Unfollow</a>
-                                    {% else %}
-                                        <a type="button" href="{% url 'recom:follow' pk=user_profile.pk %}">Follow</a>
+                <div class="row">
+                    <div class="col-12">
+                        <div id="user-info" class="card mt-3">
+                            <div class="card-body">
+                                <img src="{{ user_profile.profile_photo.url }}" alt="" class="card-img"
+                                     style="width: 70%; height: auto">
+                                <h4 class="card-title">{{ user_profile.get_full_name }}</h4>
+                                {% if user.is_authenticated %}
+                                    {% if user_profile != user %}
+                                        {% if user_profile.pk|is_followed:user %}
+                                            <a type="button"
+                                               href="{% url 'recom:unfollow' pk=user_profile.pk %}">Unfollow</a>
+                                        {% else %}
+                                            <a type="button"
+                                               href="{% url 'recom:follow' pk=user_profile.pk %}">Follow</a>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
-                            {% endif %}
 
-                            <p class="card-text">{{ user_profile.info }}</p>
-                            <a href="{% url "recom:wishes" user_pk=user_profile.pk %}">Wishes: {{ user_profile.wishes.all.count }}</a>
-                            <a href="{% url "recom:follows" user_pk=user_profile.pk %}">Follows: {{ user_profile.follows.all.count }}</a>
-                            <a href="{% url "recom:followers" user_pk=user_profile.pk %}">Followers: {{ user_profile.followed_by.all.count }}</a>
+                                <p class="card-text">{{ user_profile.info }}</p>
+                                <a href="{% url "recom:wishes" user_pk=user_profile.pk %}">Wishes: {{ user_profile.wishes.all.count }}</a>
+                                <a href="{% url "recom:follows" user_pk=user_profile.pk %}">Follows: {{ user_profile.follows.all.count }}</a>
+                                <a href="{% url "recom:followers" user_pk=user_profile.pk %}">Followers: {{ user_profile.followed_by.all.count }}</a>
+                            </div>
                         </div>
                     </div>
                 </div>
+            {% if point %}
+                <div class="row px-4 my-3">
+                    <div class="col-12">
+                        <h4>Recommends</h4>
+                        <div class="row row-cols-5">
+                            {% for piece in point %}
+                                <div class="card pl-1">
+                                    <img src="{{ piece.photo.url }}" class="card-img-top mx-auto" alt="" style="max-height: 5vw; max-width: 5vw">
+                                    <div class="point card-body text-center">
+                                        {% render_stars_of piece=piece user=user %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
             </div>
         </div>
         <div class="col-7">
@@ -35,9 +63,10 @@
                 <div class="card mt-3">
                     <div class="card-header"><a href="{% get_url pk=comment.piece.pk %}">{{ comment.piece.name }}</a>
                         - {% render_stars n=comment.point %}
-                    <span class="float-right">
+                        <span class="float-right">
                         {% if comment.user.pk == user.pk %}
-                            <a href="{% url 'recom:del_comment' pk=comment.pk %}?from=profile" title="Delete" class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>
+                            <a href="{% url 'recom:del_comment' pk=comment.pk %}?from=profile" title="Delete"
+                               class="btn btn-sm btn-none"><i class="fas fa-times"></i></a>
                         {% endif %}
                     </span>
                     </div>

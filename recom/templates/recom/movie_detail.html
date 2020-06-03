@@ -6,7 +6,7 @@
 {% block info2 %}
     {% if object.acted_by.exists %}
         <h6>Performers</h6>
-        <ul style="list-style-type:none; padding-left: 0">
+        <ul style="list-style-type:none; margin-left: 30%">
             {% for act in object.acted_by.all %}
                 <li class="pt-1" style="text-align: left">
                     <img class="rounded-circle mr-1"
