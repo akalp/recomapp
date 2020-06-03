@@ -17,8 +17,6 @@ from django.urls import path
 
 from recom import views
 
-app_name = 'recom'
-
 urlpatterns = [
     path('login_register/', views.login_register, name='login_register'),
     path('logout/', views.user_logout, name='logout'),
@@ -37,7 +35,7 @@ urlpatterns = [
     path('books/<pk>', views.BookDetailView.as_view(), name="book_detail"),
 
     path('music', views.MusicIndex.as_view(), name="music_index"),
-    path('books/all', views.MusicListView.as_view(), name="music_list"),
+    path('music/all', views.MusicListView.as_view(), name="music_list"),
     path('music/best', views.MusicBestListView.as_view(), name="music_best"),
     path('music/trends', views.MusicTrendListView.as_view(), name="music_trend"),
     path('music/<pk>', views.MusicDetailView.as_view(), name="music_detail"),
@@ -108,3 +106,5 @@ urlpatterns = [
     path('delete_director/<pk>', views.DirectorDeleteView.as_view(), name="delete_director"),
     path('delete_performer/<pk>', views.PerformerDeleteView.as_view(), name="delete_performer"),
 ]
+app_name = 'recom'
+

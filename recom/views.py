@@ -133,7 +133,7 @@ class MovieDetailView(generic.DetailView):
 class MusicIndex(generic.ListView):
     model = Music
     template_name = 'recom/music_index.html'
-    context_object_name = "music"
+    context_object_name = "musics"
 
     def get_queryset(self):
         return self.model.objects.all().annotate(avg_point=(Avg('points__point')))[:10]
@@ -591,31 +591,31 @@ class ReportView(generic.TemplateView):
         data["encokbegenilenyorumlar"] = Comment.objects.annotate(like_count=Count("liked")).order_by("-like_count")[
                                          :10]
 
-        data["encoketkilesimalanparcalar"] = PieceBaseModel.objects.annotate(wish_count=Count("wished_by"),
-                                                                             comment_count=Count("comments"),
-                                                                             point_count=Count("points")).annotate(
+        data["encoketkilesimalanparcalar"] = PieceBaseModel.objects.annotate(wish_count=Count("wished_by", distinct=True),
+                                                                             comment_count=Count("comments", distinct=True),
+                                                                             point_count=Count("points", distinct=True)).annotate(
             total=F("wish_count") + F("comment_count") + F("point_count")).order_by("-total")
 
-        data["encoketkilesimverenkullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(
-            comment_like_count=Count("liked_comments"), follow_count=Count("follows"), wish_count=Count("wishes"),
-            comment_count=Count("comments"),
-            point_count=Count("points")).annotate(
+        data["encoketkilesimverenkullanicilar"] = get_user_model().objects.annotate(
+            comment_like_count=Count("liked_comments", distinct=True), follow_count=Count("follows", distinct=True), wish_count=Count("wishes", distinct=True),
+            comment_count=Count("comments", distinct=True),
+            point_count=Count("points", distinct=True)).annotate(
             total=F("comment_like_count") + F("follow_count") + F("wish_count") + F("comment_count") + F("point_count")
         ).order_by("-total")
 
-        data["encoketkilesimalankullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(
-            follower_count=Count("followed_by"),
+        data["encoketkilesimalankullanicilar"] = get_user_model().objects.annotate(
+            follower_count=Count("followed_by", distinct=True),
             comment_like_count=Count(
-                "comments__liked")).annotate(
+                "comments__liked", distinct=True)).annotate(
             total=F("follower_count") + F("comment_like_count")).order_by("-total")[:10]
 
         data["bestpieces"] = PieceBaseModel.objects.filter(points__isnull=False).annotate(
             avg_point=(Avg('points__point'))).order_by('-avg_point')[:10]
 
         trending_time = datetime.date.today() - datetime.timedelta(days=7)
-        data["trendpieces"] = PieceBaseModel.objects.all().annotate(avg_point=(Avg('points__point')), counts=Count(
+        data["trendpieces"] = PieceBaseModel.objects.annotate(avg_point=(Avg('points__point'))).annotate( counts=Count(
             Case(When(points__date__gte=trending_time, then=1),
-                 output_field=IntegerField()))).filter(points__date__gte=trending_time).order_by(
+                 output_field=IntegerField()), distinct=True)).filter(points__date__gte=trending_time).order_by(
             '-counts')[:10]
 
         data["piece_counts"] = {"Movie": Movie.objects.count(), "Music": Music.objects.count(), "Book": Book.objects.count()}
