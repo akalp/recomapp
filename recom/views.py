@@ -600,8 +600,8 @@ class ReportView(generic.TemplateView):
             comment_like_count=Count("liked_comments"), follow_count=Count("follows"), wish_count=Count("wishes"),
             comment_count=Count("comments"),
             point_count=Count("points")).annotate(
-            total=F("liked_comments") + F("follows") + F("wish_count") + F("comment_count") + F(
-                "point_count")).order_by("-total")
+            total=F("comment_like_count") + F("follow_count") + F("wish_count") + F("comment_count") + F("point_count")
+        ).order_by("-total")
 
         data["encoketkilesimalankullanicilar"] = get_user_model().objects.exclude(pk=1).annotate(
             follower_count=Count("followed_by"),
