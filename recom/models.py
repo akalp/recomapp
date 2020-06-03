@@ -39,7 +39,7 @@ class Point(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="points", verbose_name="User")
     piece = models.ForeignKey(to=PieceBaseModel, on_delete=models.CASCADE, related_name="points", verbose_name="Piece")
     point = models.IntegerField(null=False, verbose_name="Point")
-    date = models.DateTimeField(null=False, default=datetime.datetime.now())  ## FIXME add auto_now
+    date = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("user", "piece",)
