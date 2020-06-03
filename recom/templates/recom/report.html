@@ -133,6 +133,8 @@
             </table>
         </div>
 
+    </div>
+    <div id="print2">
         <div class="py-3" id="report5">
 
             <h3>Best Pieces by Average Point</h3>
@@ -183,6 +185,7 @@
                 </tbody>
             </table>
         </div>
+
 
         <div class="py-3" id="report7">
             <h3>Recorded Piece Counts</h3>
@@ -274,7 +277,10 @@
         $('#jsPDFdbtn').click(function () {
             var doc = new jsPDF("p", "pt", "a4");
             doc.addHTML($("#print"), function () {
-                doc.save("report.pdf");
+                doc.addPage();
+                doc.addHTML($("#print2"), function () {
+                    doc.save("report.pdf");
+                })
             });
         });
     </script>
