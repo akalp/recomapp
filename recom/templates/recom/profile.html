@@ -22,11 +22,11 @@
                                 {% if user.is_authenticated %}
                                     {% if user_profile != user %}
                                         {% if user_profile.pk|is_followed:user %}
-                                            <a type="button"
-                                               href="{% url 'recom:unfollow' pk=user_profile.pk %}">Unfollow</a>
+                                            <a type="button" class="btn btn-danger"
+                                               href="{% url 'recom:unfollow' pk=user_profile.pk %}"><i class="fas fa-times"></i> Unfollow</a>
                                         {% else %}
-                                            <a type="button"
-                                               href="{% url 'recom:follow' pk=user_profile.pk %}">Follow</a>
+                                            <a type="button" class="btn btn-success"
+                                               href="{% url 'recom:follow' pk=user_profile.pk %}"><i class="fas fa-plus"></i> Follow</a>
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
@@ -50,7 +50,7 @@
                                             <img src="{{ piece.photo.url }}" class="card-img-top mx-auto" alt=""
                                                  style="max-height: 5vw; max-width: 5vw">
                                             <div class="point card-body text-center">
-                                                {% render_stars_of piece=piece user=user %}
+                                                {% render_stars_of piece=piece user=user_profile %}
                                                 <div><small>{{ piece.name }}</small></div>
                                             </div>
                                         </div>
